@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">LuluFindy</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Κωδικός</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="hint">hint</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search_parking_space">🔍 Αναζήτηση Θέσης</string>
+    <string name="wallet">👛 Πορτοφόλι</string>
+    <string name="payment">💸 Ολοκλήρωση / Πληρωμή</string>
+    <string name="start_parking">🚗 Έναρξη Στάθμευσης</string>
+    <string name="aloha">Say aloha to no more parking stress</string>
+    <string name="remain_euros">0,0€</string>
+    <string name="wallet_icon">👛</string>
+    <string name="hello_user">Hello user!</string>
+    <string name="name">Ονομα</string>
+    <string name="car_license_plate">Αριθμός Κυκλοφορίας</string>
+    <string name="parking">Τύπος Parking</string>
+    <string name="last_name">Επώνυμο</string>
+    <string name="todo">TODO</string>
+    <string name="manage_spaces">⚙️ Διαχείριση Χώρων Στάθμευσης</string>
+    <string name="parked">Στάθμευση</string>
+    <string name="payment2">Πληρωμή</string>
+    <string name="search">Αναζήτηση</string>
+    <string name="wallet2">Πορτοφόλι</string>
+    <string name="manage_space">Διαχείριση Χώρων Στάθμευσης</string>
+    <string name="logout">Αποσύνδεση</string>
+    <string name="title_activity_classic_parking">ClassicParking</string>
+    <string name="title">Επίλεξε θέση parking</string>
+    <string name="backArray">Πίσω</string>
+    <string name="title_activity_electric_parkings">electric_parkings</string>
+    <string name="title_activity_disabled_parking">DisabledParking</string>
+</resources>

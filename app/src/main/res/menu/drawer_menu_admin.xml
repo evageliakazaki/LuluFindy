@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_parking_admin"
+        android:icon="@drawable/ic_parking"
+        android:title="@string/parked" />
+
+    <item
+        android:id="@+id/nav_payment_admin"
+        android:icon="@drawable/ic_payment"
+        android:title="@string/payment2" />
+
+    <item
+        android:id="@+id/nav_search_admin"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/nav_wallet_admin"
+        android:icon="@drawable/ic_wallet"
+        android:title="@string/wallet2" />
+
+    <item
+        android:id="@+id/nav_admin_manage_parking"
+        android:icon="@drawable/ic_settings" android:title="@string/manage_space" />
+
+
+    <item
+        android:id="@+id/nav_logout_admin"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/logout" />
+
+</menu>
