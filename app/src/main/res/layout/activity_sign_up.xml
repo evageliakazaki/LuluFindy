@@ -62,43 +62,6 @@
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/car_license_plate"
-            android:layout_width="272dp"
-            android:layout_height="51dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#ED6091"
-            android:hint="@string/car_license_plate"
-            tools:ignore="TextContrastCheck" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/parking_type_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/parking">
-
-        <AutoCompleteTextView
-            android:id="@+id/parking_type"
-            android:layout_width="272dp"
-            android:layout_height="51dp"
-            android:layout_gravity="center_horizontal"
-            android:background="#ED6091"
-            android:dropDownWidth="match_parent"
-            android:dropDownHeight="wrap_content"
-            android:dropDownVerticalOffset="8dp"
-            android:enabled="true"
-            android:inputType="none"
-            android:padding="12dp"
-            android:textColorHint="@android:color/white"
-            tools:ignore="LabelFor,TextContrastCheck" />
-    </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout

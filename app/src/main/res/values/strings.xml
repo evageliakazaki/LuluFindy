@@ -34,4 +34,9 @@
     <string name="backArray">Πίσω</string>
     <string name="title_activity_electric_parkings">electric_parkings</string>
     <string name="title_activity_disabled_parking">DisabledParking</string>
+    <string name="start">Έναρξη</string>
+    <string name="time">Χρόνος</string>
+    <string name="charge">Χρέωση</string>
+    <string name="license_plate">Πινακίδες</string>
+    <string name="parking_space">επιλογή θέσης</string>
 </resources>

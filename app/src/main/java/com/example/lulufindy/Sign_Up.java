@@ -21,11 +21,11 @@ package com.example.lulufindy;
         import java.util.Objects;
 
 public class Sign_Up extends AppCompatActivity {
-    private TextInputEditText editTextEmail, editTextPassword, nameInput, lastNameInput, carPlateInput;
+    private TextInputEditText editTextEmail, editTextPassword, nameInput, lastNameInput;
     private Button buttonSignUp;
     private FirebaseAuth mAuth;
     private TextView sign_in;
-    private AutoCompleteTextView parkingTypeView, parkingTypeInput;
+
 
     private FirebaseFirestore db;
 
@@ -49,26 +49,15 @@ public class Sign_Up extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password);
         buttonSignUp = findViewById(R.id.button_sign_up);
         sign_in = findViewById(R.id.Sing_in_page);
-        parkingTypeView = findViewById(R.id.parking_type);
+
 
         nameInput = findViewById(R.id.name);
         lastNameInput = findViewById(R.id.last_name);
-        carPlateInput = findViewById(R.id.car_license_plate);
-        parkingTypeInput = findViewById(R.id.parking_type);
+
 
         db = FirebaseFirestore.getInstance();
 
-        String[] parkingTypes = {"Ηλεκτρική Θέση", "Θέση Αναπήρων", "Κανονική Θέση"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                parkingTypes
-        );
 
-        parkingTypeView.setAdapter(adapter);
-        parkingTypeView.setOnClickListener(v -> {
-            parkingTypeView.showDropDown();  // αναγκαστική εμφάνιση της λίστας
-        });
 
         sign_in.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), Sing_In.class);
@@ -83,10 +72,8 @@ public class Sign_Up extends AppCompatActivity {
 
             String name = nameInput.getText().toString().trim();
             String lastName = lastNameInput.getText().toString().trim();
-            String carPlate = carPlateInput.getText().toString().trim();
-            String parkingType = parkingTypeInput.getText().toString().trim();
 
-            if (name.isEmpty() || lastName.isEmpty() || carPlate.isEmpty() || parkingType.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (name.isEmpty() || lastName.isEmpty() ||  email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Συμπλήρωσε όλα τα πεδία", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -114,8 +101,7 @@ public class Sign_Up extends AppCompatActivity {
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("name", name);
                                 user.put("last_name", lastName);
-                                user.put("car_plate", carPlate);
-                                user.put("parking_type", parkingType);
+
 
                                 // Αποθήκευση των δεδομένων στο Firestore με το ίδιο userId
                                 db.collection("users").document(userId).set(user)
@@ -146,7 +132,5 @@ public class Sign_Up extends AppCompatActivity {
     private void clearInputs() {
         nameInput.setText("");
         lastNameInput.setText("");
-        carPlateInput.setText("");
-        parkingTypeInput.setText("");
     }
 }
