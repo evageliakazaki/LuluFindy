@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         });
-
         searchBtn=findViewById(R.id.btnSearch);
         searchBtn.setOnClickListener(v -> showParkingTypeList());
     }
