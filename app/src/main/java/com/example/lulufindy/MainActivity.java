@@ -1,6 +1,7 @@
 package com.example.lulufindy;
 
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private Button searchBtn;
+
+    private Button startBtn;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -58,60 +61,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Ορισμός του listener για τις επιλογές του μενού
         navigationView.setNavigationItemSelectedListener(this);
 
-        searchBtn = findViewById(R.id.btnSearch);
-        searchBtn.setOnClickListener(v -> {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                // Αν υπάρχει χρήστης, παίρνουμε τα δεδομένα του από τη Firestore
-                String userId = currentUser.getUid();
-                db.collection("users").document(userId).get()
-                        .addOnSuccessListener(documentSnapshot -> {
-                            if (documentSnapshot.exists()) {
-                                // Παίρνουμε την τιμή του parking_type από το Firestore
-                                String parkingType = documentSnapshot.getString("parking_type");
-
-                                // Ελέγχουμε και εκτυπώνουμε την τιμή του parking_type
-                                Log.d("Firestore", "Parking Type: " + parkingType);
-
-                                if (parkingType != null) {
-                                    // Αν η τιμή του parkingType είναι σωστή, προχωράμε στην αντίστοιχη Activity
-                                    switch (parkingType) {
-                                        case "Ηλεκτρική Θέση":
-                                            startActivity(new Intent(MainActivity.this, ElectricParking.class));
-                                            break;
-                                        case "Θέση Αναπήρων":
-                                            startActivity(new Intent(MainActivity.this, DisabledParking.class));
-                                            break;
-                                        case "Κανονική Θέση":
-                                            startActivity(new Intent(MainActivity.this, ClassicParking.class));
-                                            break;
-                                        default:
-                                            Toast.makeText(MainActivity.this, "Άγνωστος τύπος θέσης", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Log.d("Firestore", "Parking Type is null or not available");
-                                }
-                            } else {
-                                Log.d("Firestore", "Document does not exist");
-                            }
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.d("Firestore", "Error getting document", e);
-                            Toast.makeText(MainActivity.this, "Σφάλμα κατά την λήψη δεδομένων.", Toast.LENGTH_SHORT).show();
-                        });
-            } else {
-                // Αν δεν υπάρχει χρήστης, κάνουμε log out και γυρνάμε στο SignIn
-                Toast.makeText(MainActivity.this, "Δεν είστε συνδεδεμένοι", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Sing_In.class);
-                startActivity(intent);
-                finish();
-            }
+        startBtn=findViewById(R.id.btnStartParking);
+        startBtn.setOnClickListener(v-> {
+            Intent intent = new Intent(MainActivity.this, StartParking.class);
+            startActivity(intent);
+            finish();
         });
+
+        searchBtn=findViewById(R.id.btnSearch);
+        searchBtn.setOnClickListener(v -> showParkingTypeList());
+    }
+
+    private void showParkingTypeList() {
+        String[] parkingOptions = {"Κανονική Θέση", "Ηλεκτρική Θέση", "Θέση Αναπήρων"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Επιλέξτε τύπο θέσης στάθμευσης")
+                .setItems(parkingOptions, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            startActivity(new Intent(MainActivity.this, ClassicParking.class));
+                            break;
+                        case 1:
+                            startActivity(new Intent(MainActivity.this, ElectricParking.class));
+                            break;
+                        case 2:
+                            startActivity(new Intent(MainActivity.this, DisabledParking.class));
+                            break;
+                        default:
+                            Toast.makeText(this, "Άγνωστη επιλογή", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Άκυρο", null)
+                .show();
     }
 
 
-
-        @Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
             return true;
@@ -221,17 +207,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //    }
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_start_parking) {
-            // Κώδικας για την επιλογή "Έναρξη Στάθμευσης"
-            // Θα προσθέσουμε λειτουργικότητα σε επόμενο βήμα
-        } else if (id == R.id.nav_end_parking) {
+        if (id == R.id.nav_parking){
+            Intent intent = new Intent(getApplicationContext(),StartParking.class);
+            startActivity(intent);
+            finish();
+        }
+
+       //else if (id == R.id.nav_end_parking) {
             // Κώδικας για την επιλογή "Ολοκλήρωση / Πληρωμή"
             // Θα προσθέσουμε λειτουργικότητα σε επόμενο βήμα
-            } else if (id == R.id.nav_wallet) {
+           // } else if (id == R.id.nav_wallet) {
             // Κώδικας για την επιλογή "Πορτοφόλι"
             // Θα προσθέσουμε λειτουργικότητα σε επόμενο βήμα*/
 
-         if (id == R.id.nav_search) {
+         else if (id == R.id.nav_search) {
             Intent intent = new Intent(getApplicationContext(),ClassicParking.class);
             startActivity(intent);
             finish();

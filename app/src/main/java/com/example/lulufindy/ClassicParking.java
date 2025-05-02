@@ -47,11 +47,12 @@ public class ClassicParking extends AppCompatActivity {
 
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
-        setContentView(R.layout.activity_electric_parking);
+        setContentView(R.layout.activity_classic_parking);
 
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setMultiTouchControls(true);
+        map.getTileProvider().getTileRequestCompleteHandlers().clear(); // Καθαρίζει τυχόν παλιά handlers
+
 
         backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(v -> {
@@ -67,7 +68,8 @@ public class ClassicParking extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -79,8 +81,8 @@ public class ClassicParking extends AppCompatActivity {
     private void getLocation() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000); // 10 seconds
-        locationRequest.setFastestInterval(5000); // 5 seconds
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
 
         locationCallback = new LocationCallback() {
             @Override
@@ -96,8 +98,6 @@ public class ClassicParking extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                     updateUserLocation(location.getLatitude(), location.getLongitude());
-
-                    // Σταματάμε updates για εξοικονόμηση
                     fusedLocationClient.removeLocationUpdates(locationCallback);
                 }
             }
@@ -110,13 +110,18 @@ public class ClassicParking extends AppCompatActivity {
 
     private void updateUserLocation(double latitude, double longitude) {
         GeoPoint userLocation = new GeoPoint(latitude, longitude);
-        map.getController().setZoom(15.0);
-        map.getController().setCenter(userLocation);
+
+        // Ασφαλές centering με redraw
+        map.post(() -> {
+            map.getController().setZoom(15.0);
+            map.getController().setCenter(userLocation);
+            map.invalidate(); // 🔁 Αναγκάζει το view να ζωγραφιστεί
+        });
 
         if (userMarker == null) {
             userMarker = new Marker(map);
             userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            userMarker.setTitle("Εδώ βρίσκεσαι!");
+            userMarker.setTitle("Βρίσκεσαι εδώ!");
             userMarker.setIcon(ResourcesCompat.getDrawable(getResources(), org.osmdroid.library.R.drawable.marker_default, null));
             map.getOverlays().add(userMarker);
         }
@@ -127,7 +132,7 @@ public class ClassicParking extends AppCompatActivity {
 
     private void loadParkingSpots() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("ElectricParkings")
+        db.collection("ClassicParkings")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
