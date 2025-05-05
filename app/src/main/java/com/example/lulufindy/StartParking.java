@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
+import android.app.AlertDialog;
+
 
 
 import android.view.MenuItem;
@@ -46,7 +48,7 @@ public class StartParking extends AppCompatActivity {
     FirebaseUser user;
 
     private EditText vehicleNumberEditText;
-    private Button startButton, areabtn,backBtn;
+    private Button startButton, areabtn,backBtn,stopBtn;
     private TextView timerTextView, costTextView;
 
     private ParkingSession currentSession;
@@ -85,9 +87,17 @@ public class StartParking extends AppCompatActivity {
 
         backBtn = findViewById(R.id.back2);
         backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(StartParking.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            String origin = getIntent().getStringExtra("origin");
+
+            Intent intent;
+            if ("main".equals(origin)) {
+                intent = new Intent(StartParking.this, MainActivity.class);
+            } else {
+                intent = new Intent(StartParking.this, AdminMainActivity.class);
+
+                startActivity(intent);
+                finish();
+            }
         });
 
 
@@ -106,6 +116,31 @@ public class StartParking extends AppCompatActivity {
 
             Toast.makeText(StartParking.this, "Η στάθμευση ξεκίνησε!", Toast.LENGTH_SHORT).show();
         });
+        stopBtn=findViewById(R.id.stopButton);
+        stopBtn.setOnClickListener(v -> {
+            if (currentSession != null && currentSession.isActive()) {
+                new AlertDialog.Builder(StartParking.this)
+                        .setTitle("Ολοκλήρωση Στάθμευσης")
+                        .setMessage("Τελειώσατε τη διαδρομή σας;")
+                        .setPositiveButton("Ναι", (dialog, which) -> {
+                            currentSession.stopSession(); // Σταματάει τη μέτρηση
+                            handler.removeCallbacks(updateTimerRunnable);
+                            Toast.makeText(StartParking.this, "Η στάθμευση τερματίστηκε!", Toast.LENGTH_SHORT).show();
+
+                            // Μεταφορά στην κλάση Payment
+                            Intent intent = new Intent(StartParking.this, Payment.class);
+                            startActivity(intent);
+                        })
+                        .setNegativeButton("Όχι", (dialog, which) -> {
+                            // Δεν σταματάει τίποτα — συνεχίζει το χρονόμετρο
+                            Toast.makeText(StartParking.this, "Η στάθμευση συνεχίζεται.", Toast.LENGTH_SHORT).show();
+                        })
+                        .show();
+            } else {
+                Toast.makeText(StartParking.this, "Δεν υπάρχει ενεργή στάθμευση.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         String[] parkingTypes = {"Ηλεκτρική Θέση", "Θέση Αναπήρων", "Κανονική Θέση"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -158,16 +193,22 @@ public class StartParking extends AppCompatActivity {
                                     // Αν η τιμή του parkingType είναι σωστή, προχωράμε στην αντίστοιχη Activity
                                     switch (parkingType) {
                                         case "Ηλεκτρική Θέση":
-                                            startActivity(new Intent(StartParking.this, ElectricParking.class));
+                                            Intent intent = new Intent(StartParking.this, ElectricParking.class);
+                                            intent.putExtra("origin", "start");
+                                            startActivity(intent);
                                             break;
                                         case "Θέση Αναπήρων":
-                                            startActivity(new Intent(StartParking.this, DisabledParking.class));
+                                            Intent intent1 = new Intent(StartParking.this, DisabledParking.class);
+                                            intent1.putExtra("origin", "start");
+                                            startActivity(intent1);
                                             break;
                                         case "Κανονική Θέση":
-                                            startActivity(new Intent(StartParking.this, ClassicParking.class));
+                                            Intent intent2 = new Intent(StartParking.this, ClassicParking.class);
+                                            intent2.putExtra("origin", "start");
+                                            startActivity(intent2);
                                             break;
                                         default:
-                                            Toast.makeText(StartParking.this, "Άγνωστος τύπος θέσης", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(StartParking.this, "Δώσε Αριθμό Κυκλοφορίας και Τύπο Parking", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.d("Firestore", "Parking Type is null or not available");

@@ -34,6 +34,11 @@ public class ParkingSession {
         long totalMinutes = elapsedMillis / (1000 * 60);
         return totalMinutes * costPerMinute;
     }
+
+    public void stopSession() {
+        this.active = false;
+    }
+
 }
 
 

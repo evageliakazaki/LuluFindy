@@ -3,6 +3,7 @@ package com.example.lulufindy;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast; // Για απλά μηνύματα
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,31 +13,94 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import android.app.AlertDialog;
+import android.util.Log;
+
+import android.content.Intent;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
 public class AdminMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
 
+    private Button searchBtn;
+
+    private Button startBtn;
+
+    FirebaseAuth auth;
+    FirebaseUser user;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
 
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // ✅ Συνδέουμε το Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_admin);
+        setSupportActionBar(toolbar);
+
         drawerLayout = findViewById(R.id.drawer_layout_admin);
         navigationView = findViewById(R.id.navigation_view_admin);
 
+        // ✅ Δημιουργούμε τον toggle με το toolbar
         toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         navigationView.setNavigationItemSelectedListener(this);
+
+        startBtn=findViewById(R.id.btnAdminButton2);
+        startBtn.setOnClickListener(v-> {
+            Intent intent = new Intent(AdminMainActivity.this, StartParking.class);
+            intent.putExtra("origin", "start");
+            startActivity(intent);
+            finish();
+        });
+        searchBtn=findViewById(R.id.btnSearchParkingAdmin);
+        searchBtn.setOnClickListener(v -> showParkingTypeList());
     }
+    private void showParkingTypeList() {
+        String[] parkingOptions = {"Κανονική Θέση", "Ηλεκτρική Θέση", "Θέση Αναπήρων"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Επιλέξτε τύπο θέσης στάθμευσης")
+                .setItems(parkingOptions, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            startActivity(new Intent(AdminMainActivity.this, ClassicParking.class));
+                            break;
+                        case 1:
+                            startActivity(new Intent(AdminMainActivity.this, ElectricParking.class));
+                            break;
+                        case 2:
+                            startActivity(new Intent(AdminMainActivity.this, DisabledParking.class));
+                            break;
+                        default:
+                            Toast.makeText(this, "Άγνωστη επιλογή", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Άκυρο", null)
+                .show();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -56,19 +120,21 @@ public class AdminMainActivity extends AppCompatActivity implements NavigationVi
             // Πρόσθεσε εδώ την λογική για την επιλογή 1
 
         } else if (id == R.id.nav_parking_admin) {
-            Toast.makeText(this, "Στάθμευση", Toast.LENGTH_SHORT).show();
-            // Πρόσθεσε εδώ την λογική για την στάθμευση (admin)
-        } else if (id == R.id.nav_payment_admin) {
-            Toast.makeText(this, "Πληρωμή", Toast.LENGTH_SHORT).show();
-            // Πρόσθεσε εδώ την λογική για την πληρωμή (admin)
+            Intent intent = new Intent(getApplicationContext(),StartParking.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_search_admin) {
-            Toast.makeText(this, "Αναζήτηση", Toast.LENGTH_SHORT).show();
-            // Πρόσθεσε εδώ την λογική για την αναζήτηση (admin)
+            Intent intent = new Intent(getApplicationContext(),ClassicParking.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_wallet_admin) {
             Toast.makeText(this, "Πορτοφόλι", Toast.LENGTH_SHORT).show();
             // Πρόσθεσε εδώ την λογική για το πορτοφόλι (admin)
         } else if (id == R.id.nav_logout_admin) {
-            Toast.makeText(this, "Αποσύνδεση", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getApplicationContext(),Sing_In.class);
+            startActivity(intent);
+            finish();
 
         }
 

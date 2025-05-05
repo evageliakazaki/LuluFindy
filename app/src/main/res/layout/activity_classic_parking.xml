@@ -20,7 +20,7 @@
         android:layout_gravity="bottom|start"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#E31A54"
+        android:backgroundTint="#ED6091"
         android:text="@string/backArray"
         android:textAlignment="center"
         android:textSize="15sp"

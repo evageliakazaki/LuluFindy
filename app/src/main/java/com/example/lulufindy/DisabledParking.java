@@ -56,7 +56,17 @@ public class DisabledParking extends AppCompatActivity {
 
         backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(DisabledParking.this, MainActivity.class);
+            String origin = getIntent().getStringExtra("origin");
+
+            Intent intent;
+            if ("start".equals(origin)) {
+                intent = new Intent(DisabledParking.this, StartParking.class);
+            } else if ("main".equals(origin)) {
+                intent = new Intent(DisabledParking.this, MainActivity.class);
+            } else {
+                intent = new Intent(DisabledParking.this, AdminMainActivity.class);
+            }
+
             startActivity(intent);
             finish();
         });

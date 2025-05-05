@@ -56,7 +56,17 @@ public class ElectricParking extends AppCompatActivity {
 
         backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(ElectricParking.this, MainActivity.class);
+            String origin = getIntent().getStringExtra("origin");
+
+            Intent intent;
+            if ("start".equals(origin)) {
+                intent = new Intent(ElectricParking.this, StartParking.class);
+            } else if ("main".equals(origin)) {
+                intent = new Intent(ElectricParking.this, MainActivity.class);
+            } else {
+                intent = new Intent(ElectricParking.this, AdminMainActivity.class);
+            }
+
             startActivity(intent);
             finish();
         });

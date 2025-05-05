@@ -56,10 +56,21 @@ public class ClassicParking extends AppCompatActivity {
 
         backBtn = findViewById(R.id.back);
         backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(ClassicParking.this, MainActivity.class);
+            String origin = getIntent().getStringExtra("origin");
+
+            Intent intent;
+            if ("start".equals(origin)) {
+                intent = new Intent(ClassicParking.this, StartParking.class);
+            } else if ("main".equals(origin)) {
+                intent = new Intent(ClassicParking.this, MainActivity.class);
+            } else {
+                intent = new Intent(ClassicParking.this, AdminMainActivity.class);
+            }
+
             startActivity(intent);
             finish();
         });
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 

@@ -39,4 +39,10 @@
     <string name="charge">Χρέωση</string>
     <string name="license_plate">Πινακίδες</string>
     <string name="parking_space">επιλογή θέσης</string>
+    <string name="stop">Λήξη</string>
+    <string name="startpark">🚗 Έναρξη Στάθμευσης</string>
+    <string name="paymentprocess">💸 Ολοκλήρωση / Πληρωμή</string>
+    <string name="searchpark">🔍 Αναζήτηση Θέσης</string>
+    <string name="walletprocess">👛 Πορτοφόλι</string>
+    <string name="manage">⚙️ Διαχείριση Χώρων Στάθμευσης</string>
 </resources>

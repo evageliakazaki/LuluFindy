@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startBtn=findViewById(R.id.btnStartParking);
         startBtn.setOnClickListener(v-> {
             Intent intent = new Intent(MainActivity.this, StartParking.class);
+            intent.putExtra("origin", "start");
             startActivity(intent);
             finish();
         });
