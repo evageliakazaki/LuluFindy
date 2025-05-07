@@ -169,6 +169,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu"
-        tools:ignore="VisualLintBounds" />
+        tools:ignore="VisualLintBounds"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.widget.Button;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -21,10 +20,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -34,57 +37,65 @@ public class DisabledParking extends AppCompatActivity {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    private MapView map;
+    private MapView mapView;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker userMarker;
     private ProgressDialog progressDialog;
-    private Button backBtn;
+    private ProgressBar mapLoading;
     private LocationCallback locationCallback;
+    private boolean loadingHidden = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Configuration.getInstance().load(getApplicationContext(),
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        Configuration.getInstance().setUserAgentValue(getPackageName());
         setContentView(R.layout.activity_classic_parking);
 
-        map = findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.getTileProvider().getTileRequestCompleteHandlers().clear(); // Καθαρίζει τυχόν παλιά handlers
+        mapView = findViewById(R.id.map);
+        mapLoading = findViewById(R.id.mapLoading);
+        MaterialButton backButton = findViewById(R.id.back);
 
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setMultiTouchControls(true);
+        mapView.getController().setZoom(15.0);
 
-        backBtn = findViewById(R.id.back);
-        backBtn.setOnClickListener(v -> {
-            String origin = getIntent().getStringExtra("origin");
-
-            Intent intent;
-            if ("start".equals(origin)) {
-                intent = new Intent(DisabledParking.this, StartParking.class);
-            } else if ("main".equals(origin)) {
-                intent = new Intent(DisabledParking.this, MainActivity.class);
-            } else {
-                intent = new Intent(DisabledParking.this, AdminMainActivity.class);
+        mapView.addMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                hideProgressBarOnce();
+                return true;
             }
 
-            startActivity(intent);
-            finish();
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                hideProgressBarOnce();
+                return true;
+            }
         });
 
+        backButton.setOnClickListener(v -> finish());
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLocation();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Φόρτωση τοποθεσίας...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        loadParkingSpots();
+    }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+
+    private void hideProgressBarOnce() {
+        if (!loadingHidden) {
+            loadingHidden = true;
+            runOnUiThread(() -> mapLoading.setVisibility(View.GONE));
+        }
+    }
+
+    private void checkLocationPermissionAndRequest() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getLocation();
+        } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            getLocation();
         }
     }
 
@@ -113,27 +124,39 @@ public class DisabledParking extends AppCompatActivity {
             }
         };
 
+        // ✅ Ελέγχουμε αν έχει δοθεί άδεια
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+            try {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+            } catch (SecurityException e) {
+                Toast.makeText(this, "Απορρίφθηκε η άδεια τοποθεσίας.", Toast.LENGTH_SHORT).show();
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
 
     private void updateUserLocation(double latitude, double longitude) {
         GeoPoint userLocation = new GeoPoint(latitude, longitude);
 
-        // Ασφαλές centering με redraw
-        map.post(() -> {
-            map.getController().setZoom(15.0);
-            map.getController().setCenter(userLocation);
-            map.invalidate(); // 🔁 Αναγκάζει το view να ζωγραφιστεί
+        mapView.post(() -> {
+            mapView.getController().setZoom(15.0);
+            mapView.getController().setCenter(userLocation);
+            mapView.invalidate();
         });
 
         if (userMarker == null) {
-            userMarker = new Marker(map);
+            userMarker = new Marker(mapView);
             userMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             userMarker.setTitle("Βρίσκεσαι εδώ!");
             userMarker.setIcon(ResourcesCompat.getDrawable(getResources(), org.osmdroid.library.R.drawable.marker_default, null));
-            map.getOverlays().add(userMarker);
+            mapView.getOverlays().add(userMarker);
         }
         userMarker.setPosition(userLocation);
 
@@ -163,21 +186,32 @@ public class DisabledParking extends AppCompatActivity {
 
     private void addParkingMarker(double latitude, double longitude) {
         GeoPoint parkingLocation = new GeoPoint(latitude, longitude);
-        Marker parkingMarker = new Marker(map);
+        Marker parkingMarker = new Marker(mapView);
         parkingMarker.setPosition(parkingLocation);
         parkingMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.blue, null));
-        parkingMarker.setTitle("Θέση στάθμευσης");
 
         parkingMarker.setOnMarkerClickListener((marker, mapView) -> {
-            if (userMarker != null) {
-                openGoogleMaps(userMarker.getPosition(), parkingLocation);
-            }
+            new android.app.AlertDialog.Builder(DisabledParking.this)
+                    .setTitle("Δέσμευση Θέσης")
+                    .setMessage("Θέλεις να δεσμεύσεις αυτή τη θέση στάθμευσης;")
+                    .setPositiveButton("Ναι", (dialog, which) -> {
+                        // Εδώ βάζεις τη λογική για δέσμευση
+                        Toast.makeText(DisabledParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
+                        openGoogleMaps(userMarker.getPosition(), parkingLocation);
+
+                        // Αν θες, μπορείς να ενημερώσεις βάση ή να αλλάξεις το εικονίδιο:
+                        // marker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.parking_reserved, null));
+                    })
+                    .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
+                    .show();
+
             return true;
         });
 
-        map.getOverlays().add(parkingMarker);
+        mapView.getOverlays().add(parkingMarker);
     }
+
 
     private void openGoogleMaps(GeoPoint from, GeoPoint to) {
         String uri = "https://www.google.com/maps/dir/?api=1&origin=" + from.getLatitude() + "," + from.getLongitude()
@@ -211,12 +245,12 @@ public class DisabledParking extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        map.onResume();
+        mapView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        map.onPause();
+        mapView.onPause();
     }
 }
