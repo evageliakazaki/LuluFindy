@@ -1,3 +1,4 @@
+// ElectricParking.java
 package com.example.lulufindy;
 
 import android.Manifest;
@@ -21,6 +22,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -32,6 +35,10 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ElectricParking extends AppCompatActivity {
 
@@ -80,21 +87,10 @@ public class ElectricParking extends AppCompatActivity {
         loadParkingSpots();
     }
 
-
     private void hideProgressBarOnce() {
         if (!loadingHidden) {
             loadingHidden = true;
             runOnUiThread(() -> mapLoading.setVisibility(View.GONE));
-        }
-    }
-
-    private void checkLocationPermissionAndRequest() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            getLocation();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -114,30 +110,18 @@ public class ElectricParking extends AppCompatActivity {
 
                 android.location.Location location = locationResult.getLastLocation();
                 if (location != null) {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
                     updateUserLocation(location.getLatitude(), location.getLongitude());
                     fusedLocationClient.removeLocationUpdates(locationCallback);
                 }
             }
         };
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
-            } catch (SecurityException e) {
-                Toast.makeText(this, "Απορρίφθηκε η άδεια τοποθεσίας.", Toast.LENGTH_SHORT).show();
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-            }
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
-
 
     private void updateUserLocation(double latitude, double longitude) {
         GeoPoint userLocation = new GeoPoint(latitude, longitude);
@@ -156,8 +140,6 @@ public class ElectricParking extends AppCompatActivity {
             mapView.getOverlays().add(userMarker);
         }
         userMarker.setPosition(userLocation);
-
-        loadParkingSpots();
     }
 
     private void loadParkingSpots() {
@@ -169,19 +151,16 @@ public class ElectricParking extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             com.google.firebase.firestore.GeoPoint location = document.getGeoPoint("pin");
                             if (location != null) {
-                                addParkingMarker(location.getLatitude(), location.getLongitude());
+                                addParkingMarker(location.getLatitude(), location.getLongitude(), document.getId());
                             }
                         }
                     } else {
                         Toast.makeText(ElectricParking.this, "Σφάλμα κατά την ανάκτηση θέσεων.", Toast.LENGTH_SHORT).show();
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(ElectricParking.this, "Απέτυχε η σύνδεση με τη βάση.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void addParkingMarker(double latitude, double longitude) {
+    private void addParkingMarker(double latitude, double longitude, String parkingName) {
         GeoPoint parkingLocation = new GeoPoint(latitude, longitude);
         Marker parkingMarker = new Marker(mapView);
         parkingMarker.setPosition(parkingLocation);
@@ -189,26 +168,45 @@ public class ElectricParking extends AppCompatActivity {
         parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.electric_car, null));
 
         parkingMarker.setOnMarkerClickListener((marker, mapView) -> {
-            new android.app.AlertDialog.Builder(ElectricParking.this)
+            new android.app.AlertDialog.Builder(this)
                     .setTitle("Δέσμευση Θέσης")
                     .setMessage("Θέλεις να δεσμεύσεις αυτή τη θέση στάθμευσης;")
                     .setPositiveButton("Ναι", (dialog, which) -> {
-                        // Εδώ βάζεις τη λογική για δέσμευση
-                        Toast.makeText(ElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
-                        openGoogleMaps(userMarker.getPosition(), parkingLocation);
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        // Αν θες, μπορείς να ενημερώσεις βάση ή να αλλάξεις το εικονίδιο:
-                        // marker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.parking_reserved, null));
+                        db.collection("ElectricParkings")
+                                .document(parkingName)
+                                .update("taken", true)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
+                                    openGoogleMaps(userMarker.getPosition(), parkingLocation);
+
+                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                    Map<String, Object> history = new HashMap<>();
+                                    history.put("latitude", latitude);
+                                    history.put("longitude", longitude);
+                                    history.put("timestamp", System.currentTimeMillis());
+                                    history.put("parkingType", "ElectricParkings");
+                                    history.put("parkingName", parkingName);
+
+                                    db.collection("users")
+                                            .document(userId)
+                                            .update("reservedHistory", FieldValue.arrayUnion(history))
+                                            .addOnFailureListener(e -> {
+                                                Map<String, Object> user = new HashMap<>();
+                                                user.put("reservedHistory", Collections.singletonList(history));
+                                                db.collection("users").document(userId).set(user);
+                                            });
+                                });
                     })
                     .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
                     .show();
-
             return true;
         });
 
         mapView.getOverlays().add(parkingMarker);
     }
-
 
     private void openGoogleMaps(GeoPoint from, GeoPoint to) {
         String uri = "https://www.google.com/maps/dir/?api=1&origin=" + from.getLatitude() + "," + from.getLongitude()
@@ -231,9 +229,6 @@ public class ElectricParking extends AppCompatActivity {
                 getLocation();
             } else {
                 Toast.makeText(this, "Η άδεια τοποθεσίας είναι απαραίτητη.", Toast.LENGTH_SHORT).show();
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
