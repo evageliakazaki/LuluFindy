@@ -45,4 +45,7 @@
     <string name="searchpark">🔍 Αναζήτηση Θέσης</string>
     <string name="walletprocess">👛 Πορτοφόλι</string>
     <string name="manage">⚙️ Διαχείριση Χώρων Στάθμευσης</string>
+    <string name="history_of_parking">Ιστορικό δεσμευμένων θέσεων στάθμευσης:</string>
+    <string name="no_history">Το ιστορικό κρατήσεων είναι άδειο</string>
+    <string name="parking_time">Πληροφορίες χρόνου στάθμευσης:</string>
 </resources>

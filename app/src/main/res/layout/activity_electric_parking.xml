@@ -12,6 +12,13 @@
         android:layout_height="match_parent"
         android:textAlignment="center" />
 
+    <ProgressBar
+        android:id="@+id/mapLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
     <!-- Κουμπί κάτω αριστερά -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/back"
