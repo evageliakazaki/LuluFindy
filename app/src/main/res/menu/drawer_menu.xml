@@ -13,8 +13,8 @@
 
     <item
         android:id="@+id/nav_wallet"
-        android:icon="@drawable/ic_wallet"
-        android:title="@string/wallet2" />
+        android:icon="@drawable/ic_wallet_code"
+        android:title="@string/wallet3" />
 
     <item
         android:id="@+id/nav_logout"

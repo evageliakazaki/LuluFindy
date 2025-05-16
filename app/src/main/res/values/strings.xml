@@ -10,7 +10,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search_parking_space">🔍 Αναζήτηση Θέσης</string>
-    <string name="wallet">👛 Πορτοφόλι</string>
+    <string name="wallet2">👛 Πορτοφόλι</string>
     <string name="payment">💸 Ολοκλήρωση / Πληρωμή</string>
     <string name="start_parking">🚗 Έναρξη Στάθμευσης</string>
     <string name="aloha">Say aloha to no more parking stress</string>
@@ -26,7 +26,7 @@
     <string name="parked">Στάθμευση</string>
     <string name="payment2">Πληρωμή</string>
     <string name="search">Αναζήτηση</string>
-    <string name="wallet2">Πορτοφόλι</string>
+    <string name="wallet3">Πορτοφόλι</string>
     <string name="manage_space">Διαχείριση Χώρων Στάθμευσης</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="title_activity_classic_parking">ClassicParking</string>
@@ -48,4 +48,42 @@
     <string name="history_of_parking">Ιστορικό δεσμευμένων θέσεων στάθμευσης:</string>
     <string name="no_history">Το ιστορικό κρατήσεων είναι άδειο</string>
     <string name="parking_time">Πληροφορίες χρόνου στάθμευσης:</string>
+    <string name="title_activity_start_classic_parkig">StartClassicParkig</string>
+    <string name="title_activity_start_classic_parking">StartClassicParking</string>
+    <string name="selected_parking">Επιλεγμένη θέση:</string>
+    <string name="warning">❗Πατήστε έναρξη αφού σταθμεύσετε</string>
+    <string name="title_activity_start_electric_parking">StartElectricParking</string>
+    <string name="title_activity_start_disabled_parking">StartDisabledParking</string>
+    <string name="payment_message">Επιλέξτε τον τρόπο πληρωμής που προτιμάτε:</string>
+    <string name="apple_pay">Apple Pay</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="credit_card">Κάρτα</string>
+    <string name="wallet">Πορτοφόλι</string>
+    <string name="pay_button_text">ΠΛΗΡΩΜΗ</string>
+    <string name="select_payment_method">Επιλέξτε μέθοδο πληρωμής</string>
+    <string name="visa">Visa</string>
+    <string name="card">Κάρτα</string>
+    <string name="total_pay">Σύνολο:</string>
+    <string name="amount_value">5.00€</string>
+    <string name="face_id">Face ID</string>
+    <string name="lulu_findy_logo">Λογότυπο Lulu Findy</string>
+    <string name="goBack">Επιστροφή</string>
+    <string name="complete_payment">Ολοκλήρωση Πληρωμής</string>
+    <string name="payment_successful">Η πληρωμή ολοκληρώθηκε επιτυχώς</string>
+    <string name="payment_successful_message">Η πληρωμή σας ολοκληρώθηκε με επιτυχία!</string>
+    <string name="payment_method_value">Μέθοδος: Apple Pay</string>
+    <string name="return_home">Επιστροφή στην αρχική</string>
+    <string name="title_activity_apple_pay">ApplePayActivity</string>
+    <string name="title_activity_google_pay">GooglePayActivity</string>
+    <string name="pay_with_apple_pay">Πληρωμή με Apple Pay</string>
+
+    <!-- Checkout activity -->
+    <string name="title_activity_card_payment">CardPaymentActivity</string>
+    <string name="checkout_item_description">Description</string>
+    <string name="googlepay_status_unavailable" translatable="false">Unfortunately, Google Pay is
+        not available on this phone.
+    </string>
+    <string name="payments_show_name" translatable="false">Successfully received payment data for
+        %s!
+    </string>
 </resources>

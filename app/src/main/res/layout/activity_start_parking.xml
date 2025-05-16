@@ -11,11 +11,11 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         app:srcCompat="@drawable/lulu_findy_logo"
         tools:ignore="ContentDescription,ImageContrastCheck" />
 
-    <com.google.android.material.textfield.TextInputLayout
+   <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="#ED6091"
         android:text="@string/title"
         android:textColor="#FFFFFF"
@@ -67,6 +67,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85"
         tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/parking_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/selected_parking"
+        android:textAlignment="center"
+        android:textColor="#1DAEAD"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/warning"
+        android:textAlignment="center"
+        android:textColor="#1DAEAD"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -78,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:backgroundTint="#ED6091"
             android:text="@string/start"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -93,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="60dp"
             android:backgroundTint="#ED6091"
             android:text="@string/stop"
@@ -109,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/time"
         android:textAlignment="center"
@@ -126,7 +149,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/charge"
         android:textAlignment="center"
@@ -143,8 +166,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
         android:backgroundTint="#ED6091"
         android:text="@string/backArray"
         android:textAlignment="center"

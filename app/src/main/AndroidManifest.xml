@@ -17,16 +17,56 @@
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
         <activity
+            android:name=".WalletManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WalletPayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ApplePayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CardPaymentSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CardPaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GooglePayActivity"
+            android:exported="false" />
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBc_QI1nh9EfLlCSdcTEUPjNhTYtCX2viI" />
+
+        <activity
+            android:name=".StartDisabledParking"
+            android:exported="false"
+            android:label="@string/title_activity_start_disabled_parking" />
+        <activity
+            android:name=".StartElectricParking"
+            android:exported="false"
+            android:label="@string/title_activity_start_electric_parking" />
+        <activity
+            android:name=".StartClassicParking"
+            android:exported="false"
+            android:label="@string/title_activity_start_classic_parking" />
+        <activity
             android:name=".Payment"
             android:exported="false" />
         <activity
             android:name=".StartParking"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
-
         <activity
             android:name=".DisabledParking"
             android:exported="false"

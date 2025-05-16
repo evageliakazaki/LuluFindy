@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pink_gradient_background"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Εικονική Κάρτα Πορτοφολιού -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/card_background"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp"
+            android:elevation="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LuLu Findy"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Υπόλοιπο"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/balance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0,00 €"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Προσθήκη χρημάτων -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Προσθήκη Χρημάτων στο Πορτοφόλι"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Επιλέξτε Ποσό"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <!-- Ποσά -->
+            <Button
+                android:id="@+id/btn_amount_5"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pink_soft"
+                android:text="5€"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_pink_button" />
+
+            <Button
+                android:id="@+id/btn_amount_10"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="8dp"
+                android:backgroundTint="@color/pink_soft"
+                android:text="10€"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_pink_button" />
+
+            <Button
+                android:id="@+id/btn_amount_15"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pink_soft"
+                android:text="15€"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_pink_button" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Επιλέξτε μέθοδο πληρωμής"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <ImageButton
+                android:id="@+id/btn_google_pay"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_pink_button"
+                android:backgroundTint="#FFC0CB"
+                android:contentDescription="Google Pay"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_google_pay" />
+
+            <ImageButton
+                android:id="@+id/btn_apple_pay"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_pink_button"
+                android:backgroundTint="#FFC0CB"
+                android:contentDescription="Apple Pay"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_apple_pay" />
+
+            <Button
+                android:id="@+id/btn_card_pay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pink_soft"
+                android:text="Κάρτα"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_pink_button" />
+
+        </LinearLayout>
+
+        <!-- Κουμπιά Πληρωμής και Επιστροφής -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <!-- Κουμπιά Πληρωμής -->
+            <Button
+                android:id="@+id/btn_back_home"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Επιστροφή"
+                android:backgroundTint="@color/pink_strong"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_pink_button"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_complete_pay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Πληρωμή"
+                android:backgroundTint="@color/pink_strong"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_pink_button"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

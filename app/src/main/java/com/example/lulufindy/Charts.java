@@ -36,9 +36,9 @@ public class Charts extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.reservation_list);
         averageDurationView = findViewById(R.id.average_duration);
-        averageClassic = findViewById(R.id.average_classic);
+        /*averageClassic = findViewById(R.id.average_duration);
         averageElectric = findViewById(R.id.average_electric);
-        averageDisabled = findViewById(R.id.average_disabled);
+        averageDisabled = findViewById(R.id.average_disabled);*/
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fetchHistory();
@@ -116,7 +116,7 @@ public class Charts extends AppCompatActivity {
                             else
                                 averageDisabled.setText("Disabled: καμία εγγραφή");
 
-                            recyclerView.setAdapter(new ReservationListAdapter(lines));
+                            /*recyclerView.setAdapter(new ReservationListAdapter(lines));*/
                             recyclerView.setVisibility(View.VISIBLE);
                             emptyView.setVisibility(View.GONE);
                         } else {
