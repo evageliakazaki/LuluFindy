@@ -44,6 +44,8 @@ public class GooglePayActivity extends AppCompatActivity {
         });
 
         returnSuccessButton.setOnClickListener(v -> {
+            Intent intent = new Intent(GooglePayActivity.this, MainActivity.class);
+            startActivity(intent);
             finish();
         });
     }

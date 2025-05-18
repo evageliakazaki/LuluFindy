@@ -32,7 +32,7 @@ public class AdminMainActivity extends AppCompatActivity implements NavigationVi
 
     private Button searchBtn;
 
-    private Button startBtn;
+    private Button startBtn,walletbtn;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -70,12 +70,20 @@ public class AdminMainActivity extends AppCompatActivity implements NavigationVi
         startBtn=findViewById(R.id.btnAdminButton2);
         startBtn.setOnClickListener(v-> {
             Intent intent = new Intent(AdminMainActivity.this, StartParking.class);
-            intent.putExtra("origin", "start");
+            intent.putExtra("origin", "admin");
             startActivity(intent);
             finish();
         });
         searchBtn=findViewById(R.id.btnSearchParkingAdmin);
         searchBtn.setOnClickListener(v -> showParkingTypeList());
+
+        walletbtn = findViewById(R.id.btnSearchAdmin);
+        walletbtn.setOnClickListener(v-> {
+            Intent intent = new Intent(AdminMainActivity.this, WalletManagerActivity.class);
+            intent.putExtra("origin", "admin");
+            startActivity(intent);
+            finish();
+        });
     }
     private void showParkingTypeList() {
         String[] parkingOptions = {"Κανονική Θέση", "Ηλεκτρική Θέση", "Θέση Αναπήρων"};
@@ -124,12 +132,11 @@ public class AdminMainActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_search_admin) {
-            Intent intent = new Intent(getApplicationContext(),ClassicParking.class);
+            showParkingTypeList();
+        } else if (id == R.id.nav_wallet_admin) {
+            Intent intent = new Intent(getApplicationContext(),WalletManagerActivity.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_wallet_admin) {
-            Toast.makeText(this, "Πορτοφόλι", Toast.LENGTH_SHORT).show();
-            // Πρόσθεσε εδώ την λογική για το πορτοφόλι (admin)
         } else if (id == R.id.nav_logout_admin) {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getApplicationContext(),Sing_In.class);

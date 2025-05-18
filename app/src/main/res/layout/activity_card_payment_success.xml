@@ -34,13 +34,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:backgroundTint="#FF69B4"
-        android:text="ΕΠΙΣΤΡΟΦΗ"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/pink_hover"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp"
         android:paddingTop="12dp"
+        android:paddingRight="32dp"
         android:paddingBottom="12dp"
-        android:background="@drawable/rounded_pink_button" />
+        android:text="ΕΠΙΣΤΡΟΦΗ"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

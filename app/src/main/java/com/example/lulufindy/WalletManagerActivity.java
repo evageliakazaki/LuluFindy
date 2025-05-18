@@ -1,5 +1,6 @@
 package com.example.lulufindy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -61,7 +62,23 @@ public class WalletManagerActivity extends AppCompatActivity {
         });
 
         Button btnBack = findViewById(R.id.btn_back_home);
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            String origin = getIntent().getStringExtra("origin");
+
+            if ("start".equals(origin)) {
+                Intent intent = new Intent(WalletManagerActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else if ("admin".equals(origin)) {
+                Intent intent = new Intent(WalletManagerActivity.this, AdminMainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                finish(); // fallback
+            }
+        });
+
+
 
         updateBalanceDisplay();
     }

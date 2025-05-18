@@ -38,7 +38,7 @@ import java.util.*;
 public class StartDisabledParking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "AIzaSyBc_QI1nh9EfLlCSdcTEUPjNhTYtCX2viI";
+    private static final String API_KEY = "API_KEY";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;

@@ -1,5 +1,6 @@
 package com.example.lulufindy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,8 @@ public class ApplePayActivity extends AppCompatActivity {
         });
 
         returnSuccessButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ApplePayActivity.this, MainActivity.class);
+            startActivity(intent);
             finish();
         });
     }

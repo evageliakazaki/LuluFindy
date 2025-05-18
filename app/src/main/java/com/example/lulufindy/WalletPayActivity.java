@@ -45,6 +45,8 @@ public class WalletPayActivity extends AppCompatActivity {
             boolean success = WalletManager.deductFromWallet(paymentAmount);
             if (success) {
                 Toast.makeText(this, "Η πληρωμή ολοκληρώθηκε", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(WalletPayActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 Toast.makeText(this, "Αποτυχία πληρωμής. Μη επαρκές υπόλοιπο.", Toast.LENGTH_SHORT).show();

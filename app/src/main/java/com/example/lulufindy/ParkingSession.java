@@ -54,4 +54,9 @@ public class ParkingSession {
     public long getEndTimeMillis() {
         return endTimeMillis;
     }
+
+    public long getElapsedTime() {
+        return getDurationMillis();
+    }
+
 }

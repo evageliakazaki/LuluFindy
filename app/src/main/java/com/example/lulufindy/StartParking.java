@@ -79,14 +79,16 @@ public class StartParking extends AppCompatActivity {
         backBtn = findViewById(R.id.back2);
         backBtn.setOnClickListener(v -> {
             String origin = getIntent().getStringExtra("origin");
-            Intent intent;
-            if ("main".equals(origin)) {
-                intent = new Intent(StartParking.this, MainActivity.class);
-            } else {
-                intent = new Intent(StartParking.this, AdminMainActivity.class);
+
+            if ("start".equals(origin)) {
+                Intent intent = new Intent(StartParking.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else if ("admin".equals(origin)) {
+                Intent intent = new Intent(StartParking.this, AdminMainActivity.class);
+                startActivity(intent);
+                finish();
             }
-            startActivity(intent);
-            finish();
         });
 
         TextView parkingNameTextView = findViewById(R.id.parking_name);
@@ -170,8 +172,16 @@ public class StartParking extends AppCompatActivity {
                             }
 
                             Toast.makeText(StartParking.this, "Η στάθμευση τερματίστηκε!", Toast.LENGTH_SHORT).show();
+                            long elapsedTimeMillis = currentSession.getElapsedTime(); // σε milliseconds
+                            String formattedTime = currentSession.getFormattedElapsedTime();
+                            double runningCost = currentSession.calculateCost(costPerMinute);
+                            double totalCost = 0.50 + runningCost;
+
                             Intent intent = new Intent(StartParking.this, Payment.class);
+                            intent.putExtra("total_time", formattedTime);
+                            intent.putExtra("total_cost", totalCost);
                             startActivity(intent);
+
                         })
                         .setNegativeButton("Όχι", null)
                         .show();

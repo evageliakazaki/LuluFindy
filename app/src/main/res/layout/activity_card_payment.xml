@@ -122,8 +122,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ποσό πληρωμής: "
-            android:textSize="16sp"
-            android:layout_marginTop="12dp" />
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/black"/>
 
 
 
@@ -218,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/rounded_pink_button"
+                android:backgroundTint="@color/pink_hover"
                 android:text="Πληρωμή με κάρτα" />
 
             <Button
@@ -227,7 +228,7 @@
                 android:layout_height="56dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_pink_button"
+                android:backgroundTint="@color/pink_hover"
                 android:text="Επιστροφή" />
         </LinearLayout>
 
