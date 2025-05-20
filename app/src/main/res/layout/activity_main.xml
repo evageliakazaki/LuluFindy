@@ -113,8 +113,6 @@
 
             </androidx.cardview.widget.CardView>
 
-
-
             <androidx.cardview.widget.CardView
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
@@ -151,6 +149,27 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="sans-serif"
                     android:text="@string/wallet2"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#FFD1DC"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp">
+
+                <Button
+                    android:id="@+id/btnCharts"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/charts"
                     android:textColor="#333333"
                     android:textSize="16sp"
                     android:textStyle="bold" />

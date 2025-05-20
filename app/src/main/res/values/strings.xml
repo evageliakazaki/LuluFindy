@@ -76,6 +76,12 @@
     <string name="title_activity_apple_pay">ApplePayActivity</string>
     <string name="title_activity_google_pay">GooglePayActivity</string>
     <string name="pay_with_apple_pay">Πληρωμή με Apple Pay</string>
+    <string name="charts">📊 Δραστηριότητα Χρήστη</string>
+    <string name="chart1">Ιστορικό Στάθμευσης</string>
+    <string name="chart2">Ιστορικό Πληρωμών</string>
+    <string name="chart3">Χρόνοι Στάθμευσης</string>
+    <string name="average_time">Διάρκεια Σταθμεύσεων</string>
+    <string name="avg">Μέσος χρόνος Στάθμευσης:</string>
 
     <!-- Checkout activity -->
     <string name="title_activity_card_payment">CardPaymentActivity</string>

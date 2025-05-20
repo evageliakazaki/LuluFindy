@@ -156,7 +156,7 @@ public class DisabledParking extends AppCompatActivity {
 
     private void loadParkingSpots() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("ElectricParkings")
+        db.collection("DisabledParkings")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
@@ -180,7 +180,7 @@ public class DisabledParking extends AppCompatActivity {
         Marker parkingMarker = new Marker(mapView);
         parkingMarker.setPosition(parkingLocation);
         parkingMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.electric_car, null));
+        parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.blue, null));
 
         parkingMarker.setOnMarkerClickListener((marker, mapView) -> {
             new AlertDialog.Builder(DisabledParking.this)
@@ -190,15 +190,15 @@ public class DisabledParking extends AppCompatActivity {
                         Toast.makeText(DisabledParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
                         openGoogleMaps(userMarker.getPosition(), parkingLocation);
 
-                        String name = "Disabled Parking " + latitude + "," + longitude;
-                        String type = "Disabled";
+                        String name = "Parking " + latitude + "," + longitude;
+                        String type = "Classic";
                         long startTimestamp = System.currentTimeMillis();
 
                         Map<String, Object> historyEntry = new HashMap<>();
                         historyEntry.put("parkingName", name);
                         historyEntry.put("parkingType", type);
                         historyEntry.put("timestamp", startTimestamp);
-                        historyEntry.put("endTimestamp", startTimestamp);
+                        historyEntry.put("endTimestamp", startTimestamp); // μπορείς να το ενημερώσεις αργότερα όταν τελειώσει η στάθμευση
 
                         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         FirebaseFirestore.getInstance()
@@ -211,6 +211,7 @@ public class DisabledParking extends AppCompatActivity {
 
             return true;
         });
+
 
         mapView.getOverlays().add(parkingMarker);
     }

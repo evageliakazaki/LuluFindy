@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.lulufindy.StartParking;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.*;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
 import org.json.JSONArray;
@@ -33,12 +35,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-// ... (imports παραμένουν ίδια)
-
 public class StartDisabledParking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "API_KEY";
+    private static final String API_KEY = "API KEY";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -50,7 +50,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_classic_parking);
+        setContentView(R.layout.activity_start_disabled_parking);
 
         MaterialButton backButton = findViewById(R.id.back);
         backButton.setOnClickListener(v -> finish());
@@ -90,11 +90,9 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
         });
     }
 
-
-
     private void loadParkingMarkers() {
         if (parkingListener != null) {
-            parkingListener.remove(); // Αποφυγή διπλών listeners
+            parkingListener.remove();
         }
 
         parkingListener = db.collection("DisabledParkings")
@@ -105,7 +103,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                         return;
                     }
 
-                    mMap.clear(); // Καθαρίζουμε τον χάρτη πριν ξαναπροσθέσουμε markers
+                    mMap.clear();
 
                     for (QueryDocumentSnapshot doc : snapshots) {
                         GeoPoint geo = doc.getGeoPoint("pin");
@@ -113,11 +111,10 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                         String name = doc.getString("name");
                         String docId = doc.getId();
 
-                        // Εμφανίζουμε μόνο τις διαθέσιμες
                         if (geo != null && (taken == null || !taken)) {
                             LatLng pos = new LatLng(geo.getLatitude(), geo.getLongitude());
 
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue);
+                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue); // Εδώ είναι το εικονίδιο για disabled parking
 
                             Marker marker = mMap.addMarker(new MarkerOptions()
                                     .position(pos)
@@ -195,13 +192,44 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                     db.collection("DisabledParkings")
                                             .document(docId)
                                             .update("taken", true)
-                                            .addOnSuccessListener(aVoid -> Toast.makeText(StartDisabledParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show())
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(StartDisabledParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
+
+                                                // Δημιουργία ιστορικού κράτησης με σωστό name
+                                                String name = displayName != null ? displayName : "Parking " + dest.latitude + "," + dest.longitude;
+                                                String type = "Disabled"; // Ορίζουμε τον τύπο "Disabled"
+                                                long startTimestamp = System.currentTimeMillis();
+
+                                                Map<String, Object> historyEntry = new HashMap<>();
+                                                historyEntry.put("parkingName", name);
+                                                historyEntry.put("parkingType", type);
+                                                historyEntry.put("timestamp", startTimestamp);
+                                                historyEntry.put("endTimestamp", startTimestamp);
+
+                                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                FirebaseFirestore.getInstance()
+                                                        .collection("users")
+                                                        .document(userId)
+                                                        .update("reservedHistory", FieldValue.arrayUnion(historyEntry))
+                                                        .addOnFailureListener(e -> {
+                                                            // Σε περίπτωση που δεν υπάρχει το πεδίο, κάνε set
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("reservedHistory", Arrays.asList(historyEntry));
+                                                            FirebaseFirestore.getInstance()
+                                                                    .collection("users")
+                                                                    .document(userId)
+                                                                    .set(data, SetOptions.merge());
+                                                        });
+                                            })
                                             .addOnFailureListener(e -> Toast.makeText(StartDisabledParking.this, "Αποτυχία δέσμευσης.", Toast.LENGTH_SHORT).show());
 
+                                    // Αυτή η γραμμή έλειπε!
                                     Intent intent = new Intent(StartDisabledParking.this, StartParking.class);
                                     intent.putExtra("parking_name", displayName);
+                                    startActivity(intent); // <-- Η προσθήκη
+
                                     Intent returnIntent = new Intent();
-                                    returnIntent.putExtra("return_from", "startclassic");
+                                    returnIntent.putExtra("return_from", "startdisabled");
                                     returnIntent.putExtra("parking_name", displayName);
                                     setResult(RESULT_OK, returnIntent);
                                     finish();
@@ -227,16 +255,18 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
 
         while (index < len) {
             int b, shift = 0, result = 0;
-            do { b = encoded.charAt(index++) - 63;
+            do {
+                b = encoded.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift; shift += 5;
             } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : result >> 1); lat += dlat;
+            lat += ((result & 1) != 0 ? ~(result >> 1) : result >> 1);
 
             shift = 0; result = 0;
-            do { b = encoded.charAt(index++) - 63;
+            do {
+                b = encoded.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift; shift += 5;
             } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : result >> 1); lng += dlng;
+            lng += ((result & 1) != 0 ? ~(result >> 1) : result >> 1);
 
             poly.add(new LatLng(lat / 1E5, lng / 1E5));
         }

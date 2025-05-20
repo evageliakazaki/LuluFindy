@@ -10,6 +10,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Payment extends AppCompatActivity {
 
     private CardView applePayCard, googlePayCard, cardCard, walletCard;
@@ -90,6 +99,11 @@ public class Payment extends AppCompatActivity {
                     break;
             }
 
+            // Save only for supported payment methods
+            if (!selectedMethod.equals("Πορτοφόλι")) {
+                savePaymentToHistory(selectedMethod, totalAmount);
+            }
+
             if (intent1 != null) {
                 intent1.putExtra("amount", totalAmount);
                 startActivity(intent1);
@@ -104,5 +118,29 @@ public class Payment extends AppCompatActivity {
         walletCard.setCardBackgroundColor(initialBackgroundColor);
 
         selectedCard.setCardBackgroundColor(Color.parseColor("#FFEF6E99"));
+    }
+
+    private void savePaymentToHistory(String method, double amount) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        String userId = user.getUid();
+
+        // Extract clean duration string (remove "Χρόνος: ")
+        String duration = durationText.getText().toString().replace("Χρόνος: ", "").trim();
+
+        Map<String, Object> paymentEntry = new HashMap<>();
+        paymentEntry.put("method", method);
+        paymentEntry.put("amount", amount);
+        paymentEntry.put("duration", duration);
+        paymentEntry.put("timestamp", System.currentTimeMillis());
+
+        Map<String, Object> update = new HashMap<>();
+        update.put("paymentHistory", FieldValue.arrayUnion(paymentEntry));
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .set(update, SetOptions.merge());
     }
 }

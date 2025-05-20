@@ -184,31 +184,7 @@ public class ClassicParking extends AppCompatActivity {
         parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.parking, null));
 
         parkingMarker.setOnMarkerClickListener((marker, mapView) -> {
-            new AlertDialog.Builder(ClassicParking.this)
-                    .setTitle("Δέσμευση Θέσης")
-                    .setMessage("Θέλεις να δεσμεύσεις αυτή τη θέση στάθμευσης;")
-                    .setPositiveButton("Ναι", (dialog, which) -> {
-                        Toast.makeText(ClassicParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
-                        openGoogleMaps(userMarker.getPosition(), parkingLocation);
-
-                        String name = "Parking " + latitude + "," + longitude;
-                        String type = "Classic";
-                        long startTimestamp = System.currentTimeMillis();
-
-                        Map<String, Object> historyEntry = new HashMap<>();
-                        historyEntry.put("parkingName", name);
-                        historyEntry.put("parkingType", type);
-                        historyEntry.put("timestamp", startTimestamp);
-                        historyEntry.put("endTimestamp", startTimestamp); // μπορείς να το ενημερώσεις αργότερα όταν τελειώσει η στάθμευση
-
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        FirebaseFirestore.getInstance()
-                                .collection("users")
-                                .document(userId)
-                                .update("reservedHistory", FieldValue.arrayUnion(historyEntry));
-                    })
-                    .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
-                    .show();
+            openGoogleMaps(userMarker.getPosition(), parkingLocation);
 
             return true;
         });

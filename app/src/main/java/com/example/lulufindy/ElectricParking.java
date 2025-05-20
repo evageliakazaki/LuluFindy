@@ -190,15 +190,15 @@ public class ElectricParking extends AppCompatActivity {
                         Toast.makeText(ElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
                         openGoogleMaps(userMarker.getPosition(), parkingLocation);
 
-                        String name = "Electric Parking " + latitude + "," + longitude;
-                        String type = "Electric";
+                        String name = "Parking " + latitude + "," + longitude;
+                        String type = "Classic";
                         long startTimestamp = System.currentTimeMillis();
 
                         Map<String, Object> historyEntry = new HashMap<>();
                         historyEntry.put("parkingName", name);
                         historyEntry.put("parkingType", type);
                         historyEntry.put("timestamp", startTimestamp);
-                        historyEntry.put("endTimestamp", startTimestamp);
+                        historyEntry.put("endTimestamp", startTimestamp); // μπορείς να το ενημερώσεις αργότερα όταν τελειώσει η στάθμευση
 
                         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         FirebaseFirestore.getInstance()
@@ -211,6 +211,8 @@ public class ElectricParking extends AppCompatActivity {
 
             return true;
         });
+
+
 
         mapView.getOverlays().add(parkingMarker);
     }

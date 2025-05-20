@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.*;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.*;
 
 import org.json.JSONArray;
@@ -33,12 +34,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-// ... (imports παραμένουν ίδια)
-
 public class StartElectricParking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "API_KEY";
+    private static final String API_KEY = "API KEY";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -90,11 +89,9 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
         });
     }
 
-
-
     private void loadParkingMarkers() {
         if (parkingListener != null) {
-            parkingListener.remove(); // Αποφυγή διπλών listeners
+            parkingListener.remove();
         }
 
         parkingListener = db.collection("ElectricParkings")
@@ -105,7 +102,7 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                         return;
                     }
 
-                    mMap.clear(); // Καθαρίζουμε τον χάρτη πριν ξαναπροσθέσουμε markers
+                    mMap.clear();
 
                     for (QueryDocumentSnapshot doc : snapshots) {
                         GeoPoint geo = doc.getGeoPoint("pin");
@@ -113,7 +110,6 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                         String name = doc.getString("name");
                         String docId = doc.getId();
 
-                        // Εμφανίζουμε μόνο τις διαθέσιμες
                         if (geo != null && (taken == null || !taken)) {
                             LatLng pos = new LatLng(geo.getLatitude(), geo.getLongitude());
 
@@ -195,17 +191,46 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                                     db.collection("ElectricParkings")
                                             .document(docId)
                                             .update("taken", true)
-                                            .addOnSuccessListener(aVoid -> Toast.makeText(StartElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show())
+                                            .addOnSuccessListener(aVoid -> {
+                                                Toast.makeText(StartElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
+
+                                                // Δημιουργία ιστορικού κράτησης με σωστό name
+                                                String name = displayName != null ? displayName : "Parking " + dest.latitude + "," + dest.longitude;
+                                                String type = "Electric";
+                                                long startTimestamp = System.currentTimeMillis();
+
+                                                Map<String, Object> historyEntry = new HashMap<>();
+                                                historyEntry.put("parkingName", name); // Εδώ μπαίνει το όνομα από Firestore
+                                                historyEntry.put("parkingType", type);
+                                                historyEntry.put("timestamp", startTimestamp);
+                                                historyEntry.put("endTimestamp", startTimestamp); // μπορεί να ενημερωθεί αργότερα
+
+                                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                FirebaseFirestore.getInstance()
+                                                        .collection("users")
+                                                        .document(userId)
+                                                        .update("reservedHistory", FieldValue.arrayUnion(historyEntry))
+                                                        .addOnFailureListener(e -> {
+                                                            // Σε περίπτωση που δεν υπάρχει το πεδίο, κάνε set
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("reservedHistory", Arrays.asList(historyEntry));
+                                                            FirebaseFirestore.getInstance()
+                                                                    .collection("users")
+                                                                    .document(userId)
+                                                                    .set(data, SetOptions.merge());
+                                                        });
+                                            })
                                             .addOnFailureListener(e -> Toast.makeText(StartElectricParking.this, "Αποτυχία δέσμευσης.", Toast.LENGTH_SHORT).show());
 
                                     Intent intent = new Intent(StartElectricParking.this, StartParking.class);
                                     intent.putExtra("parking_name", displayName);
                                     Intent returnIntent = new Intent();
-                                    returnIntent.putExtra("return_from", "startclassic");
+                                    returnIntent.putExtra("return_from", "startelectric");
                                     returnIntent.putExtra("parking_name", displayName);
                                     setResult(RESULT_OK, returnIntent);
                                     finish();
                                 })
+
                                 .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
                                 .show();
                     });
@@ -227,16 +252,18 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
 
         while (index < len) {
             int b, shift = 0, result = 0;
-            do { b = encoded.charAt(index++) - 63;
+            do {
+                b = encoded.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift; shift += 5;
             } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : result >> 1); lat += dlat;
+            lat += ((result & 1) != 0 ? ~(result >> 1) : result >> 1);
 
             shift = 0; result = 0;
-            do { b = encoded.charAt(index++) - 63;
+            do {
+                b = encoded.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift; shift += 5;
             } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : result >> 1); lng += dlng;
+            lng += ((result & 1) != 0 ? ~(result >> 1) : result >> 1);
 
             poly.add(new LatLng(lat / 1E5, lng / 1E5));
         }
