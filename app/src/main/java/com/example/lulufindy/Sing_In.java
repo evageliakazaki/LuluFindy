@@ -28,10 +28,15 @@ public class Sing_In extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if(currentUser != null && currentUser.getEmail().equals("admin@gmail.com")){
+            Intent intent= new Intent(getApplicationContext(),AdminMainActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (currentUser != null ) {
             Intent intent= new Intent(getApplicationContext(),MainActivity.class);
             startActivity(intent);
             finish();
+
         }
     }
 
@@ -45,6 +50,14 @@ public class Sing_In extends AppCompatActivity {
         editTextPassword=findViewById(R.id.password);
         buttonSignIn=findViewById(R.id.button_sign_in);
         sign_up=findViewById(R.id.Sing_up_page);
+
+        TextView forgotPassword = findViewById(R.id.forgot_password);
+
+        forgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
+
 
         sign_up.setOnClickListener(v -> {
             Intent intent= new Intent(getApplicationContext(), Sign_Up.class);

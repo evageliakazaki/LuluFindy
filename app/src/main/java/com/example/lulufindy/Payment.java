@@ -82,31 +82,28 @@ public class Payment extends AppCompatActivity {
                 return;
             }
 
-            Intent intent1 = null;
+            Intent nextActivityIntent = null;
 
             switch (selectedMethod) {
                 case "Google Pay":
-                    intent1 = new Intent(this, GooglePayActivity.class);
+                    nextActivityIntent = new Intent(this, GooglePayActivity.class);
                     break;
                 case "Apple Pay":
-                    intent1 = new Intent(this, ApplePayActivity.class);
+                    nextActivityIntent = new Intent(this, ApplePayActivity.class);
                     break;
                 case "Κάρτα":
-                    intent1 = new Intent(this, CardPaymentActivity.class);
+                    nextActivityIntent = new Intent(this, CardPaymentActivity.class);
                     break;
                 case "Πορτοφόλι":
-                    intent1 = new Intent(this, WalletPayActivity.class);
+                    nextActivityIntent = new Intent(this, WalletPayActivity.class);
                     break;
             }
 
-            // Save only for supported payment methods
-            if (!selectedMethod.equals("Πορτοφόλι")) {
-                savePaymentToHistory(selectedMethod, totalAmount);
-            }
+            savePaymentToHistory(selectedMethod, totalAmount);
 
-            if (intent1 != null) {
-                intent1.putExtra("amount", totalAmount);
-                startActivity(intent1);
+            if (nextActivityIntent != null) {
+                nextActivityIntent.putExtra("amount", totalAmount);
+                startActivity(nextActivityIntent);
             }
         });
     }
@@ -126,7 +123,7 @@ public class Payment extends AppCompatActivity {
 
         String userId = user.getUid();
 
-        // Extract clean duration string (remove "Χρόνος: ")
+        // Extract clean duration string
         String duration = durationText.getText().toString().replace("Χρόνος: ", "").trim();
 
         Map<String, Object> paymentEntry = new HashMap<>();
@@ -135,12 +132,19 @@ public class Payment extends AppCompatActivity {
         paymentEntry.put("duration", duration);
         paymentEntry.put("timestamp", System.currentTimeMillis());
 
-        Map<String, Object> update = new HashMap<>();
-        update.put("paymentHistory", FieldValue.arrayUnion(paymentEntry));
+        // 1. Save to user's payment history
+        Map<String, Object> userUpdate = new HashMap<>();
+        userUpdate.put("paymentHistory", FieldValue.arrayUnion(paymentEntry));
 
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(userId)
-                .set(update, SetOptions.merge());
+                .set(userUpdate, SetOptions.merge());
+
+        // 2. Save to admin income tracking
+        FirebaseFirestore.getInstance()
+                .collection("admin")
+                .document("admin")
+                .update("Incomes." + userId, FieldValue.arrayUnion(paymentEntry));
     }
 }

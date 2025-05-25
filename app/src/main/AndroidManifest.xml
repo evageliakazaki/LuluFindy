@@ -19,6 +19,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBc_QI1nh9EfLlCSdcTEUPjNhTYtCX2viI" />
+
+        <activity
+            android:name=".ManagementMap2"
+            android:exported="false"
+            android:label="@string/title_activity_management_map2" />
+        <activity
+            android:name=".ParkingSpaceSituation"
+            android:exported="false" />
+        <activity
+            android:name=".WorkingHours"
+            android:exported="false" />
+        <activity
+            android:name=".Management"
+            android:exported="false" />
+        <activity
+            android:name=".ManagementMap"
+            android:exported="false"
+            android:label="Προσθήκη Θέσης" />
+        <activity
+            android:name=".AddParking"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPassword"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".WalletManagerActivity"
             android:exported="false" />
@@ -37,11 +68,6 @@
         <activity
             android:name=".GooglePayActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="API KEY" />
-
         <activity
             android:name=".StartDisabledParking"
             android:exported="false"
@@ -93,10 +119,14 @@
             android:name=".AdminMainActivity"
             android:exported="true"
             android:theme="@style/Theme.Material3.Light.NoActionBar" />
-        <activity android:name=".Charts"></activity>
-        <activity android:name=".Parking_History"></activity>
-        <activity android:name=".Payment_History"></activity>
-        <activity android:name=".Time_History"></activity>
+        <activity android:name=".Charts" />
+        <activity android:name=".Parking_History" />
+        <activity android:name=".Payment_History" />
+        <activity android:name=".Time_History" />
+        <activity android:name=".ChartsAdmin" />
+        <activity android:name=".Positions_Charts_Admin" />
+        <activity android:name=".Incomes_Admin" />
+        <activity android:name=".IncomesChart_Admin" />
     </application>
 
 </manifest>

@@ -101,6 +101,7 @@ public class Sign_Up extends AppCompatActivity {
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("name", name);
                                 user.put("last_name", lastName);
+                                user.put("email", email);
 
 
                                 // Αποθήκευση των δεδομένων στο Firestore με το ίδιο userId

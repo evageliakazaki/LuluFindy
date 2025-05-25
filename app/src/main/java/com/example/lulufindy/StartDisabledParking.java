@@ -38,7 +38,7 @@ import java.util.*;
 public class StartDisabledParking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "API KEY";
+    private static final String API_KEY = "AIzaSyBc_QI1nh9EfLlCSdcTEUPjNhTYtCX2viI";
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -195,9 +195,9 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                             .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(StartDisabledParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
 
-                                                // Δημιουργία ιστορικού κράτησης με σωστό name
+                                                // --- Δημιουργία ιστορικού entry ---
                                                 String name = displayName != null ? displayName : "Parking " + dest.latitude + "," + dest.longitude;
-                                                String type = "Disabled"; // Ορίζουμε τον τύπο "Disabled"
+                                                String type = "Disabled";
                                                 long startTimestamp = System.currentTimeMillis();
 
                                                 Map<String, Object> historyEntry = new HashMap<>();
@@ -207,32 +207,42 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                                 historyEntry.put("endTimestamp", startTimestamp);
 
                                                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                FirebaseFirestore.getInstance()
+                                                DocumentReference userRef = FirebaseFirestore.getInstance()
                                                         .collection("users")
-                                                        .document(userId)
-                                                        .update("reservedHistory", FieldValue.arrayUnion(historyEntry))
+                                                        .document(userId);
+
+                                                // --- Ενημέρωση reservedHistory (λίστα) ---
+                                                userRef.update("reservedHistory", FieldValue.arrayUnion(historyEntry))
                                                         .addOnFailureListener(e -> {
-                                                            // Σε περίπτωση που δεν υπάρχει το πεδίο, κάνε set
                                                             Map<String, Object> data = new HashMap<>();
                                                             data.put("reservedHistory", Arrays.asList(historyEntry));
-                                                            FirebaseFirestore.getInstance()
-                                                                    .collection("users")
-                                                                    .document(userId)
-                                                                    .set(data, SetOptions.merge());
+                                                            userRef.set(data, SetOptions.merge());
                                                         });
+
+                                                // --- Ενημέρωση parkingFrequency (counter per name) ---
+                                                DocumentReference adminRef = FirebaseFirestore.getInstance()
+                                                        .collection("admin")
+                                                        .document("admin");
+
+                                                String frequencyField = "parkingFrequency." + name;
+
+                                                adminRef.update(frequencyField, FieldValue.increment(1))
+                                                        .addOnFailureListener(e -> {
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put(frequencyField, 1);
+                                                            adminRef.set(data, SetOptions.merge());
+                                                        });
+
+                                                // --- Επιστροφή ---
+                                                Intent intent = new Intent(StartDisabledParking.this, StartParking.class);
+                                                intent.putExtra("parking_name", displayName);
+                                                Intent returnIntent = new Intent();
+                                                returnIntent.putExtra("return_from", "startdisabled");
+                                                returnIntent.putExtra("parking_name", displayName);
+                                                setResult(RESULT_OK, returnIntent);
+                                                finish();
                                             })
                                             .addOnFailureListener(e -> Toast.makeText(StartDisabledParking.this, "Αποτυχία δέσμευσης.", Toast.LENGTH_SHORT).show());
-
-                                    // Αυτή η γραμμή έλειπε!
-                                    Intent intent = new Intent(StartDisabledParking.this, StartParking.class);
-                                    intent.putExtra("parking_name", displayName);
-                                    startActivity(intent); // <-- Η προσθήκη
-
-                                    Intent returnIntent = new Intent();
-                                    returnIntent.putExtra("return_from", "startdisabled");
-                                    returnIntent.putExtra("parking_name", displayName);
-                                    setResult(RESULT_OK, returnIntent);
-                                    finish();
                                 })
                                 .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
                                 .show();

@@ -70,6 +70,17 @@
         tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
 
     <TextView
+        android:id="@+id/forgot_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/noAccount"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -93,4 +104,5 @@
         android:textSize="20sp"
         android:textStyle="bold"
         tools:ignore="TextSizeCheck,TextContrastCheck,VisualLintOverlap" />
+
 </LinearLayout>

@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- ✅ Toolbar -->
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_admin"
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- ✅ Κύριο περιεχόμενο -->
+        <!-- Κύριο περιεχόμενο -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,7 +46,7 @@
                     android:src="@drawable/lulu_findy_logo"
                     tools:ignore="ContentDescription,ImageContrastCheck" />
 
-                <!-- ✅ Card 1 -->
+                <!-- Κάρτες -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -67,8 +67,6 @@
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
-
-                <!-- ✅ Card 3 -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -89,7 +87,6 @@
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- ✅ Card 4 -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -110,7 +107,6 @@
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- ✅ Card 5 -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -131,11 +127,32 @@
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
+                <!-- Κάρτα Στατιστικών -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardBackgroundColor="#FFD1DC"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="6dp">
+
+                    <Button
+                        android:id="@+id/btnStatisticsAdmin"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:fontFamily="arima_variablefont_wght"
+                        android:text="@string/statistics"
+                        android:textColor="#333333"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
-    <!-- ✅ Navigation Drawer -->
+    <!-- Πλευρικό μενού -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view_admin"
         android:layout_width="wrap_content"

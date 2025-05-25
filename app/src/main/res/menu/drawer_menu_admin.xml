@@ -21,6 +21,11 @@
         android:id="@+id/nav_admin_manage_parking"
         android:icon="@drawable/ic_settings" android:title="@string/manage_space" />
 
+    <item
+        android:id="@+id/nav_charts_admin"
+        android:icon="@drawable/chart2"
+        android:title="@string/charts1"/>
+
 
     <item
         android:id="@+id/nav_logout_admin"

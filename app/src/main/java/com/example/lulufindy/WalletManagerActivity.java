@@ -19,6 +19,7 @@ public class WalletManagerActivity extends AppCompatActivity {
 
     private double selectedAmount = 0;
     private String selectedMethod = null;
+    private double balance = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class WalletManagerActivity extends AppCompatActivity {
             }
 
             WalletManager.addToWallet(selectedAmount);
-            double balance = WalletManager.getWalletBalance();
+             balance = WalletManager.getWalletBalance();
             balanceText.setText(String.format("%.2f €", balance));
 
             Toast.makeText(this, "Προστέθηκαν " + selectedAmount + "€ μέσω " + selectedMethod, Toast.LENGTH_SHORT).show();
@@ -67,6 +68,7 @@ public class WalletManagerActivity extends AppCompatActivity {
 
             if ("start".equals(origin)) {
                 Intent intent = new Intent(WalletManagerActivity.this, MainActivity.class);
+                intent.putExtra("balance", balance);
                 startActivity(intent);
                 finish();
             } else if ("admin".equals(origin)) {

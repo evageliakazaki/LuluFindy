@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">LuluFindy</string>
-    <string name="sign_in">Sign In</string>
+    <string name="sign_in">Log In</string>
     <string name="email">Email</string>
     <string name="password">Κωδικός</string>
     <string name="sign_up">Sign Up</string>
@@ -92,4 +92,21 @@
     <string name="payments_show_name" translatable="false">Successfully received payment data for
         %s!
     </string>
+    <string name="statistics">📊 Προβολή Στατιστικών</string>
+    <string name="positions_choice">Στατιστικά θέσεων</string>
+    <string name="incomes_choice">Παρακολούθηση εσόδων</string>
+    <string name="incomes_history">Ιστορικό εσόδων</string>
+    <string name="charts1">Στατιστικά</string>
+    <string name="incomes">Έσοδα</string>
+
+    <string name="get_code">Get Code</string>
+    <string name="back_to_log_in">Back to Log in</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="temp_code">Προσωρινός Κωδικός</string>
+    <string name="give_your_email">Give your Email:</string>
+    <string name="add_parking">Προσθήκη Θέσης</string>
+    <string name="parking_name">Όνομα Θέσης</string>
+    <string name="next">Επόμενο</string>
+    <string name="title_activity_management_map">ManagementMap</string>
+    <string name="title_activity_management_map2">ManagementMap2</string>
 </resources>

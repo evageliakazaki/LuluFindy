@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#FF4081"
+        android:backgroundTint="@color/pink_hover"
         android:text="@string/backArray"
         android:textColor="#F4EFEF"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +81,7 @@
             android:id="@+id/button2"
             android:layout_width="300dp"
             android:layout_height="63dp"
-            android:backgroundTint="#FF4081"
+            android:backgroundTint="@color/pink_hover"
             android:text="@string/chart1"
             android:textColor="#F6F4F4" />
 
@@ -89,7 +89,7 @@
             android:id="@+id/button3"
             android:layout_width="300dp"
             android:layout_height="63dp"
-            android:backgroundTint="#FF4081"
+            android:backgroundTint="@color/pink_hover"
             android:text="@string/chart2"
             android:textColor="#EDEBEB" />
 
@@ -97,7 +97,7 @@
             android:id="@+id/button4"
             android:layout_width="300dp"
             android:layout_height="63dp"
-            android:backgroundTint="#FF4081"
+            android:backgroundTint="@color/pink_hover"
             android:text="@string/chart3"
             android:textColor="#F6F1F1" />
 
