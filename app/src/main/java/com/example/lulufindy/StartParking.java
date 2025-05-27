@@ -141,7 +141,8 @@ public class StartParking extends AppCompatActivity {
             if (currentSession != null && currentSession.isActive()) {
                 new AlertDialog.Builder(this)
                         .setTitle("\u039f\u03bb\u03bf\u03ba\u03bb\u03ae\u03c1\u03c9\u03c3\u03b7 \u03a3\u03c4\u03ac\u03b8\u03bc\u03b5\u03c5\u03c3\u03b7\u03c2")
-                        .setMessage("\u03a4\u03b5\u03bb\u03b5\u03b9\u03ce\u03c3\u03b1\u03c4\u03b5 \u03c4\u03b7 \u03b4\u03b9\u03b1\u03b4\u03c1\u03bf\u03bc\u03ae \u03c3\u03b1\u03c2;")
+                        .setMessage("Τελειώσατε την στάθμευσή σας;")
+
                         .setPositiveButton("\u039d\u03b1\u03b9", (dialog, which) -> {
                             currentSession.stopSession();
                             handler.removeCallbacks(updateTimerRunnable);
