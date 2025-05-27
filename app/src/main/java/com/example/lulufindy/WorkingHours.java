@@ -26,6 +26,9 @@ import java.util.Map;
 public class WorkingHours extends AppCompatActivity {
 
     private Button backBtn;
+    private TextInputEditText editFrom;
+    private TextInputEditText editTo;
+    private Switch holidaySwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +60,31 @@ public class WorkingHours extends AppCompatActivity {
             datePickerDialog.show();
         });
 
+        editFrom = findViewById(R.id.editFromTime);
+        editTo = findViewById(R.id.editToTime);
+        holidaySwitch = findViewById(R.id.holidaySwitch);
+
         setupTimePickers();
+
+        // Bonus: disable hours if holiday is ON
+        holidaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editFrom.setEnabled(!isChecked);
+            editTo.setEnabled(!isChecked);
+
+            if (isChecked) {
+                editFrom.setText("ΚΛΕΙΣΤΑ");
+                editTo.setText("ΚΛΕΙΣΤΑ");
+            } else {
+                editFrom.setText("");
+                editTo.setText("");
+            }
+        });
 
         MaterialButton saveBtn = findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(v -> saveDataToFirebase());
     }
 
     private void setupTimePickers() {
-        TextInputEditText editFrom = findViewById(R.id.editFromTime);
-        TextInputEditText editTo = findViewById(R.id.editToTime);
-
         View.OnClickListener timeClickListener = view -> {
             final TextInputEditText editText = (TextInputEditText) view;
             final Calendar calendar = Calendar.getInstance();
@@ -94,14 +112,22 @@ public class WorkingHours extends AppCompatActivity {
         TextView dateTextView = findViewById(R.id.dateTextView);
         TextInputEditText fromTime = findViewById(R.id.editFromTime);
         TextInputEditText toTime = findViewById(R.id.editToTime);
-        Switch holidaySwitch = findViewById(R.id.holidaySwitch);
         Switch specialSwitch = findViewById(R.id.SpecialSwitch);
 
         String date = dateTextView.getText().toString().trim();
-        String from = fromTime.getText().toString().trim();
-        String to = toTime.getText().toString().trim();
         boolean isHoliday = holidaySwitch.isChecked();
         boolean isSpecial = specialSwitch.isChecked();
+
+        String from;
+        String to;
+
+        if (isHoliday) {
+            from = "ΚΛΕΙΣΤΑ";
+            to = "ΚΛΕΙΣΤΑ";
+        } else {
+            from = fromTime.getText().toString().trim();
+            to = toTime.getText().toString().trim();
+        }
 
         Map<String, Object> data = new HashMap<>();
         data.put("date", date);

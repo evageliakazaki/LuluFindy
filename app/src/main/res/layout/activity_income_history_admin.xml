@@ -42,6 +42,19 @@
         app:layout_constraintTop_toBottomOf="@id/paymentPieChart"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/clearFilterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#ED6091"
+        android:text="@string/clear_filter"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/filterButton"
+        app:layout_constraintEnd_toStartOf="@id/filterButton"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"/>
+
     <ProgressBar
         android:id="@+id/loadingBar"
         android:layout_width="wrap_content"

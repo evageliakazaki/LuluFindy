@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class WalletManagerActivity extends AppCompatActivity {
 
     private TextView balanceText;
@@ -19,13 +21,13 @@ public class WalletManagerActivity extends AppCompatActivity {
 
     private double selectedAmount = 0;
     private String selectedMethod = null;
-    private double balance = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_manager);
 
+        // Συνδέσεις views
         balanceText = findViewById(R.id.balance_text);
         btn5 = findViewById(R.id.btn_amount_5);
         btn10 = findViewById(R.id.btn_amount_10);
@@ -35,14 +37,17 @@ public class WalletManagerActivity extends AppCompatActivity {
         btnCardPay = findViewById(R.id.btn_card_pay);
         btnPayNow = findViewById(R.id.btn_complete_pay);
 
+        // Επιλογή ποσού
         btn5.setOnClickListener(v -> selectAmount(5, btn5));
         btn10.setOnClickListener(v -> selectAmount(10, btn10));
         btn15.setOnClickListener(v -> selectAmount(15, btn15));
 
+        // Επιλογή μεθόδου
         btnGooglePay.setOnClickListener(v -> selectMethod("Google Pay", btnGooglePay));
         btnApplePay.setOnClickListener(v -> selectMethod("Apple Pay", btnApplePay));
         btnCardPay.setOnClickListener(v -> selectMethod("Κάρτα", btnCardPay));
 
+        // Πληρωμή
         btnPayNow.setOnClickListener(v -> {
             if (selectedAmount == 0) {
                 Toast.makeText(this, "Επίλεξε ποσό", Toast.LENGTH_SHORT).show();
@@ -55,34 +60,54 @@ public class WalletManagerActivity extends AppCompatActivity {
             }
 
             WalletManager.addToWallet(selectedAmount);
-             balance = WalletManager.getWalletBalance();
-            balanceText.setText(String.format("%.2f €", balance));
-
             Toast.makeText(this, "Προστέθηκαν " + selectedAmount + "€ μέσω " + selectedMethod, Toast.LENGTH_SHORT).show();
+
             resetSelections();
+            updateBalanceDisplay();
         });
 
+        // Κουμπί επιστροφής
         Button btnBack = findViewById(R.id.btn_back_home);
         btnBack.setOnClickListener(v -> {
             String origin = getIntent().getStringExtra("origin");
 
             if ("start".equals(origin)) {
-                Intent intent = new Intent(WalletManagerActivity.this, MainActivity.class);
-                intent.putExtra("balance", balance);
-                startActivity(intent);
-                finish();
+                String uid = FirebaseAuth.getInstance().getCurrentUser() != null
+                        ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                        : null;
+
+                if (uid == null) {
+                    // Χρήστης εκτός σύνδεσης — τοπικό balance
+                    Intent intent = new Intent(WalletManagerActivity.this, MainActivity.class);
+                    intent.putExtra("balance", WalletManager.getLocalWalletBalance());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // Συνδεδεμένος χρήστης — πάρε το balance από Firebase
+                    WalletManager.getWalletBalance(balance -> {
+                        Intent intent = new Intent(WalletManagerActivity.this, MainActivity.class);
+                        intent.putExtra("balance", balance);
+                        startActivity(intent);
+                        finish();
+                    });
+                }
+
             } else if ("admin".equals(origin)) {
                 Intent intent = new Intent(WalletManagerActivity.this, AdminMainActivity.class);
                 startActivity(intent);
                 finish();
             } else {
-                finish(); // fallback
+                finish(); // Αν δεν ορίστηκε origin, απλώς κλείσε το activity
             }
         });
 
 
+        // Ζωντανή ενημέρωση υπολοίπου
+        WalletManager.startListening(newBalance -> runOnUiThread(() ->
+                balanceText.setText(String.format("%.2f €", newBalance))
+        ));
 
-        updateBalanceDisplay();
+        updateBalanceDisplay(); // Αρχική ενημέρωση
     }
 
     private void selectAmount(double amount, Button selectedButton) {
@@ -122,7 +147,15 @@ public class WalletManagerActivity extends AppCompatActivity {
     }
 
     private void updateBalanceDisplay() {
-        double balance = WalletManager.getWalletBalance();
-        balanceText.setText(String.format("%.2f €", balance));
+        WalletManager.getWalletBalance(balance ->
+                runOnUiThread(() -> balanceText.setText(String.format("%.2f €", balance)))
+        );
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WalletManager.stopListening();
     }
 }

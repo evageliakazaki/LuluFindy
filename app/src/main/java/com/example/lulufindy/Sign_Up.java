@@ -1,20 +1,20 @@
 package com.example.lulufindy;
 
 
-        import androidx.appcompat.app.AppCompatActivity;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.text.TextUtils;
-        import android.util.Log;
-        import android.widget.ArrayAdapter;
-        import android.widget.AutoCompleteTextView;
-        import android.widget.Button;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import com.google.android.material.textfield.TextInputEditText;
-        import com.google.firebase.auth.FirebaseAuth;
-        import com.google.firebase.auth.FirebaseUser;
-        import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
         import java.util.HashMap;
         import java.util.Map;
@@ -102,6 +102,7 @@ public class Sign_Up extends AppCompatActivity {
                                 user.put("name", name);
                                 user.put("last_name", lastName);
                                 user.put("email", email);
+
 
 
                                 // Αποθήκευση των δεδομένων στο Firestore με το ίδιο userId

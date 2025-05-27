@@ -44,6 +44,9 @@ public class StartParking extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    private boolean isParkingSelected = false;
+
+
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -74,9 +77,12 @@ public class StartParking extends AppCompatActivity {
         parkingTypeInput = findViewById(R.id.parking_type);
         stopBtn = findViewById(R.id.stopButton);
 
+        final String origin = getIntent().getStringExtra("origin");
+        Log.d("DEBUG", "Origin: " + origin);
+
+
         backBtn = findViewById(R.id.back2);
         backBtn.setOnClickListener(v -> {
-            String origin = getIntent().getStringExtra("origin");
 
             if ("start".equals(origin)) {
                 startActivity(new Intent(StartParking.this, MainActivity.class));
@@ -106,13 +112,29 @@ public class StartParking extends AppCompatActivity {
 
         startButton.setOnClickListener(v -> {
             String vehicleNumber = carPlateInput.getText().toString().trim();
-            if (vehicleNumber.isEmpty()) {
-                Toast.makeText(this, "\u03a3\u03c5\u03bc\u03c0\u03bb\u03ae\u03c1\u03c9\u03c3\u03b5 \u03cc\u03bb\u03b1 \u03c4\u03b1 \u03c0\u03b5\u03b4\u03af\u03b1", Toast.LENGTH_SHORT).show();
+
+            if (!isParkingSelected) {
+                Toast.makeText(this, "Πρέπει πρώτα να επιλέξετε θέση!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (vehicleNumber.isEmpty()) {
+                Toast.makeText(this, "Συμπληρώστε όλα τα πεδία", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             currentSession = new ParkingSession(vehicleNumber, System.currentTimeMillis());
             handler.post(updateTimerRunnable);
-            Toast.makeText(this, "\u0397 \u03c3\u03c4\u03ac\u03b8\u03bc\u03b5\u03c5\u03c3\u03b7 \u03be\u03b5\u03ba\u03af\u03bd\u03b7\u03c3\u03b5!", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this, "Η στάθμευση ξεκίνησε!", Toast.LENGTH_SHORT).show();
+
+            // Προαιρετικά απενεργοποιούμε το κουμπί για να μη ξεκινήσει ξανά
+            startButton.setEnabled(false);
+            areabtn.setEnabled(false);
+            carPlateInput.setEnabled(false);
+            parkingTypeInput.setEnabled(false);
+            backBtn.setEnabled(false);
+
         });
 
         stopBtn.setOnClickListener(v -> {
@@ -171,9 +193,44 @@ public class StartParking extends AppCompatActivity {
         parkingTypeView.setOnClickListener(v -> parkingTypeView.showDropDown());
 
         areabtn.setOnClickListener(v -> {
-            if (user != null) {
+            if (user != null || "admin".equals(origin)) {
                 String carPlate = carPlateInput.getText().toString().trim();
                 String parkingType = parkingTypeInput.getText().toString().trim();
+
+                // Έλεγχος αν είναι κενά
+                if (carPlate.isEmpty()) {
+                    carPlateInput.setError("Το πεδίο είναι υποχρεωτικό");
+                    return;
+                }
+                if (parkingType.isEmpty()) {
+                    parkingTypeInput.setError("Επιλέξτε τύπο θέσης");
+                    return;
+                }
+
+                // Έλεγχος μορφής πινακίδας (π.χ. ΑΒ1234 ή ΧΥΖ5678)
+                if (!carPlate.matches("^[Α-ΩA-Z]{2,3}\\d{4}$")) {
+                    carPlateInput.setError("Μη έγκυρη πινακίδα (π.χ. ΑΒ1234 ή ΧΥΖ5678)");
+                    return;
+                }
+
+                if ("admin".equals(origin)) {
+                    switch (parkingType) {
+                        case "Ηλεκτρική Θέση":
+                            startActivityForResult(new Intent(this, StartElectricParking.class).putExtra("origin", "admin"), 1);
+                            break;
+                        case "Θέση Αναπήρων":
+                            startActivityForResult(new Intent(this, StartDisabledParking.class).putExtra("origin", "admin"), 1);
+                            break;
+                        case "Κανονική Θέση":
+                            startActivityForResult(new Intent(this, StartClassicParking.class).putExtra("origin", "admin"), 1);
+                            break;
+                        default:
+                            Toast.makeText(this, "Άγνωστος τύπος θέσης.", Toast.LENGTH_SHORT).show();
+                    }
+                    isParkingSelected = true;
+                    return;
+                }
+
                 String userId = user.getUid();
 
                 Map<String, Object> update = new HashMap<>();
@@ -196,7 +253,7 @@ public class StartParking extends AppCompatActivity {
                                         startActivityForResult(new Intent(this, StartClassicParking.class).putExtra("origin", "start"), 1);
                                         break;
                                     default:
-                                        Toast.makeText(this, "Δώσε Αριθμό Κυκλοφορίας και Τύπο Parking", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Άγνωστος τύπος θέσης.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
@@ -204,12 +261,15 @@ public class StartParking extends AppCompatActivity {
                             Log.d("Firestore", "Error getting document", e);
                             Toast.makeText(this, "Σφάλμα κατά την λήψη δεδομένων.", Toast.LENGTH_SHORT).show();
                         });
+
             } else {
                 Toast.makeText(this, "Δεν είστε συνδεδεμένοι", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, Sing_In.class));
                 finish();
             }
+            isParkingSelected = true;
         });
+
     }
 
     @Override

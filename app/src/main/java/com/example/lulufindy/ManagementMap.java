@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 import android.app.AlertDialog;
@@ -45,7 +46,7 @@ import android.view.KeyEvent;
 public class ManagementMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "API KEY";
+     private static final String API_KEY = AppConfig.API_KEY;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -76,7 +77,8 @@ public class ManagementMap extends AppCompatActivity implements OnMapReadyCallba
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     actionId == EditorInfo.IME_ACTION_DONE ||
-                    (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) ||
+                    (event == null && actionId == EditorInfo.IME_NULL)) {
 
                 String input = searchBar.getText().toString().trim();
                 if (!input.isEmpty()) {
@@ -91,9 +93,7 @@ public class ManagementMap extends AppCompatActivity implements OnMapReadyCallba
                                 .position(latLng)
                                 .title("Συντεταγμένες")
                                 .icon(BitmapDescriptorFactory.fromResource(getMarkerIcon(parkingType))));
-
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         showAddLocationDialog(latLng, parkingType, parkingName);
 
                     } else {
@@ -109,9 +109,7 @@ public class ManagementMap extends AppCompatActivity implements OnMapReadyCallba
                                         .position(latLng)
                                         .title(input)
                                         .icon(BitmapDescriptorFactory.fromResource(getMarkerIcon(parkingType))));
-
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                                 showAddLocationDialog(latLng, parkingType, parkingName);
 
                             } else {
@@ -123,10 +121,18 @@ public class ManagementMap extends AppCompatActivity implements OnMapReadyCallba
                         }
                     }
                 }
+
+                // Απόκρυψη πληκτρολογίου
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+                }
+
                 return true;
             }
             return false;
         });
+
     }
 
     @Override

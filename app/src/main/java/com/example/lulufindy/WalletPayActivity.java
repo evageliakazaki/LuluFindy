@@ -21,37 +21,41 @@ public class WalletPayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_pay);
 
+        // UI binding
         walletBalanceText = findViewById(R.id.wallet_balance);
         balanceCheckText = findViewById(R.id.balance_check);
         paymentAmountText = findViewById(R.id.payment_amount_text);
         btnPay = findViewById(R.id.btn_pay);
-        btnBack = findViewById(R.id.btn_back);
         btnManage = findViewById(R.id.btn_wallet_manage);
 
+        // Λήψη ποσού πληρωμής από intent
         paymentAmount = getIntent().getDoubleExtra("amount", 0.0);
-
         paymentAmountText.setText("Ποσό πληρωμής: €" + String.format("%.2f", paymentAmount));
 
+        // Ενημέρωση υπολοίπου με το που φορτώνει η οθόνη
         refreshBalance();
 
-        btnBack.setOnClickListener(v -> finish());
 
+
+
+        // Διαχείριση υπολοίπου
         btnManage.setOnClickListener(v -> {
             Intent intent = new Intent(WalletPayActivity.this, WalletManagerActivity.class);
             startActivity(intent);
         });
 
+        // Πληρωμή
         btnPay.setOnClickListener(v -> {
-            boolean success = WalletManager.deductFromWallet(paymentAmount);
-            if (success) {
-                Toast.makeText(this, "Η πληρωμή ολοκληρώθηκε", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(WalletPayActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Αποτυχία πληρωμής. Μη επαρκές υπόλοιπο.", Toast.LENGTH_SHORT).show();
-                refreshBalance();
-            }
+            WalletManager.deductFromWallet(paymentAmount, newBalance -> {
+                if (newBalance >= 0) {
+                    Toast.makeText(this, "Η πληρωμή ολοκληρώθηκε", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(WalletPayActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(this, "Αποτυχία πληρωμής. Μη επαρκές υπόλοιπο.", Toast.LENGTH_SHORT).show();
+                    refreshBalance();
+                }
+            });
         });
     }
 
@@ -62,17 +66,18 @@ public class WalletPayActivity extends AppCompatActivity {
     }
 
     private void refreshBalance() {
-        double balance = WalletManager.getWalletBalance();
-        walletBalanceText.setText("Υπόλοιπο: €" + String.format("%.2f", balance));
+        WalletManager.getWalletBalance(balance -> {
+            walletBalanceText.setText("Υπόλοιπο: €" + String.format("%.2f", balance));
 
-        if (balance >= paymentAmount) {
-            balanceCheckText.setText("✅ Επαρκές υπόλοιπο");
-            balanceCheckText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-            btnPay.setEnabled(true);
-        } else {
-            balanceCheckText.setText("❌ Μη επαρκές υπόλοιπο");
-            balanceCheckText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-            btnPay.setEnabled(false);
-        }
+            if (balance >= paymentAmount) {
+                balanceCheckText.setText("✅ Επαρκές υπόλοιπο");
+                balanceCheckText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                btnPay.setEnabled(true);
+            } else {
+                balanceCheckText.setText("❌ Μη επαρκές υπόλοιπο");
+                balanceCheckText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                btnPay.setEnabled(false);
+            }
+        });
     }
 }

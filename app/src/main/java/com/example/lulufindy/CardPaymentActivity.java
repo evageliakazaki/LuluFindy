@@ -15,7 +15,6 @@ public class CardPaymentActivity extends AppCompatActivity {
 
     private EditText nameInput, cardNumberInput, expiryDateInput, cvvInput;
     private TextView cardHolderName, cardNumber, cardExpiry, cardCVV;
-    private Button returnButton;
     private TextView paymentAmountText;
 
     double paymentAmount;
@@ -34,7 +33,6 @@ public class CardPaymentActivity extends AppCompatActivity {
         cardNumber = findViewById(R.id.card_number);
         cardExpiry = findViewById(R.id.card_expiry);
         cardCVV = findViewById(R.id.card_cvv);
-        returnButton = findViewById(R.id.return_button);
         paymentAmountText = findViewById(R.id.payment_amount_text);
 
         Intent intent = getIntent();
@@ -43,8 +41,6 @@ public class CardPaymentActivity extends AppCompatActivity {
         }
 
         updatePaymentAmountText();
-
-        returnButton.setOnClickListener(v -> finish());
 
         nameInput.addTextChangedListener(new CardTextWatcher() {
             @Override

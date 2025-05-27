@@ -36,7 +36,6 @@ public class Payment extends AppCompatActivity {
         // Initialize Views
         durationText = findViewById(R.id.duration_text);
         chargeText = findViewById(R.id.charge_text);
-
         applePayCard = findViewById(R.id.apple_pay_card);
         googlePayCard = findViewById(R.id.google_pay_card);
         cardCard = findViewById(R.id.card_card);
@@ -45,42 +44,28 @@ public class Payment extends AppCompatActivity {
 
         initialBackgroundColor = Color.parseColor("#FFF5A2BE");
 
-        // Get intent extras
+        // Get intent data
         Intent intent = getIntent();
         String totalTime = intent.getStringExtra("total_time");
         totalAmount = intent.getDoubleExtra("total_cost", 0.00);
 
-        // Display values
         durationText.setText("Χρόνος: " + totalTime);
         chargeText.setText(String.format("Κόστος: %.2f€", totalAmount));
 
-        // Card click listeners
-        googlePayCard.setOnClickListener(v -> {
-            selectedMethod = "Google Pay";
-            highlightSelected(googlePayCard);
-        });
+        // Selectable cards
+        googlePayCard.setOnClickListener(v -> selectMethod("Google Pay", googlePayCard));
+        applePayCard.setOnClickListener(v -> selectMethod("Apple Pay", applePayCard));
+        cardCard.setOnClickListener(v -> selectMethod("Κάρτα", cardCard));
+        walletCard.setOnClickListener(v -> selectMethod("Πορτοφόλι", walletCard));
 
-        applePayCard.setOnClickListener(v -> {
-            selectedMethod = "Apple Pay";
-            highlightSelected(applePayCard);
-        });
-
-        cardCard.setOnClickListener(v -> {
-            selectedMethod = "Κάρτα";
-            highlightSelected(cardCard);
-        });
-
-        walletCard.setOnClickListener(v -> {
-            selectedMethod = "Πορτοφόλι";
-            highlightSelected(walletCard);
-        });
-
-        // Payment button action
+        // Pay button logic
         payButton.setOnClickListener(v -> {
             if (selectedMethod == null) {
                 Toast.makeText(this, "Επίλεξε τρόπο πληρωμής", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            savePaymentToHistory(selectedMethod, totalAmount);
 
             Intent nextActivityIntent = null;
 
@@ -99,8 +84,6 @@ public class Payment extends AppCompatActivity {
                     break;
             }
 
-            savePaymentToHistory(selectedMethod, totalAmount);
-
             if (nextActivityIntent != null) {
                 nextActivityIntent.putExtra("amount", totalAmount);
                 startActivity(nextActivityIntent);
@@ -108,12 +91,19 @@ public class Payment extends AppCompatActivity {
         });
     }
 
+    private void selectMethod(String method, CardView selectedCard) {
+        selectedMethod = method;
+        highlightSelected(selectedCard);
+    }
+
     private void highlightSelected(CardView selectedCard) {
+        // Reset all cards
         applePayCard.setCardBackgroundColor(initialBackgroundColor);
         googlePayCard.setCardBackgroundColor(initialBackgroundColor);
         cardCard.setCardBackgroundColor(initialBackgroundColor);
         walletCard.setCardBackgroundColor(initialBackgroundColor);
 
+        // Highlight selected
         selectedCard.setCardBackgroundColor(Color.parseColor("#FFEF6E99"));
     }
 
@@ -122,8 +112,6 @@ public class Payment extends AppCompatActivity {
         if (user == null) return;
 
         String userId = user.getUid();
-
-        // Extract clean duration string
         String duration = durationText.getText().toString().replace("Χρόνος: ", "").trim();
 
         Map<String, Object> paymentEntry = new HashMap<>();
@@ -132,16 +120,15 @@ public class Payment extends AppCompatActivity {
         paymentEntry.put("duration", duration);
         paymentEntry.put("timestamp", System.currentTimeMillis());
 
-        // 1. Save to user's payment history
+        // Save to user history
         Map<String, Object> userUpdate = new HashMap<>();
         userUpdate.put("paymentHistory", FieldValue.arrayUnion(paymentEntry));
-
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(userId)
                 .set(userUpdate, SetOptions.merge());
 
-        // 2. Save to admin income tracking
+        // Save to admin income tracking
         FirebaseFirestore.getInstance()
                 .collection("admin")
                 .document("admin")

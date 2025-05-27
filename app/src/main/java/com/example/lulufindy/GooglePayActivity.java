@@ -27,7 +27,6 @@ public class GooglePayActivity extends AppCompatActivity {
         amount = getIntent().getDoubleExtra("amount", 0.0);
         amountText = findViewById(R.id.amount_text_google_pay);
         payButton = findViewById(R.id.btn_google_pay);
-        returnButton = findViewById(R.id.btn_return);
         returnSuccessButton = findViewById(R.id.btn_return_success);
         successLayout = findViewById(R.id.success_layout);
         paymentDetailsLayout = findViewById(R.id.payment_details_layout);
@@ -37,10 +36,6 @@ public class GooglePayActivity extends AppCompatActivity {
         payButton.setOnClickListener(v -> {
             paymentDetailsLayout.setVisibility(View.GONE);
             successLayout.setVisibility(View.VISIBLE);
-        });
-
-        returnButton.setOnClickListener(v -> {
-            finish();
         });
 
         returnSuccessButton.setOnClickListener(v -> {

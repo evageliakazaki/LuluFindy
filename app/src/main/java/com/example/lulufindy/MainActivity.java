@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ImageButton btnCalendar = findViewById(R.id.btnCalendar);
+        btnCalendar.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Calendar.class);
+            startActivity(intent);
+        });
+
+        ImageButton btnProfile = findViewById(R.id.btnProfile);
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
+
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
@@ -50,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = FirebaseFirestore.getInstance();
 
         Walletbalance = findViewById(R.id.tvWalletAmount);
-        double balance = getIntent().getDoubleExtra("balance", 0.0);
-        Walletbalance.setText(String.format("%.2f €", balance));
-
 
         // Ρύθμιση του ActionBarDrawerToggle για το άνοιγμα/κλείσιμο του μενού
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -173,4 +184,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadWalletBalance();
+    }
+
+    private void loadWalletBalance() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            FirebaseFirestore.getInstance().collection("wallets")
+                    .document(currentUser.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Double balance = documentSnapshot.getDouble("balance");
+                            if (balance != null) {
+                                Walletbalance.setText(String.format("%.2f €", balance));
+                            } else {
+                                Walletbalance.setText("0.00 €");
+                            }
+                        } else {
+                            Walletbalance.setText("0.00 €");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("MainActivity", "Failed to load wallet balance", e);
+                    });
+        }
+    }
+
+
 }

@@ -40,7 +40,10 @@ public class Incomes_Admin extends AppCompatActivity {
     private Button backButton;
     private ImageView filterButton;
 
-    // === ΝΕΟ ===
+    // ΝΕΟ
+    private Button clearFilterButton;
+
+    // ΝΕΟ
     private PieChart paymentPieChart;
     private Map<String, Integer> paymentMethodCounts = new HashMap<>();
 
@@ -53,10 +56,9 @@ public class Incomes_Admin extends AppCompatActivity {
         loadingBar = findViewById(R.id.loadingBar);
         backButton = findViewById(R.id.backButton);
         filterButton = findViewById(R.id.filterButton);
+        clearFilterButton = findViewById(R.id.clearFilterButton); // ΝΕΟ
 
-        // === ΝΕΟ ===
         paymentPieChart = findViewById(R.id.paymentPieChart);
-
         db = FirebaseFirestore.getInstance();
 
         loadIncomes();
@@ -75,6 +77,7 @@ public class Incomes_Admin extends AppCompatActivity {
                         long selectedEnd = calendar.getTimeInMillis();
 
                         loadIncomesForDate(selectedStart, selectedEnd);
+                        clearFilterButton.setVisibility(View.VISIBLE); // Δείξε κουμπί καθαρισμού
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -82,12 +85,17 @@ public class Incomes_Admin extends AppCompatActivity {
             );
             datePickerDialog.show();
         });
+
+        clearFilterButton.setOnClickListener(v -> {
+            loadIncomes();
+            clearFilterButton.setVisibility(View.GONE); // Απόκρυψε κουμπί
+        });
     }
 
     private void loadIncomes() {
         loadingBar.setVisibility(View.VISIBLE);
         historyContainer.removeAllViews();
-        paymentMethodCounts.clear(); // === ΝΕΟ ===
+        paymentMethodCounts.clear();
 
         db.collection("users").get().addOnCompleteListener(task -> {
             loadingBar.setVisibility(View.GONE);
@@ -122,8 +130,6 @@ public class Incomes_Admin extends AppCompatActivity {
 
                                 if (userName != null && amount != null && timestamp != null) {
                                     allPayments.add(new PaymentEntry(userName, amount, timestamp, method));
-
-                                    // === ΝΕΟ ===
                                     String methodKey = method.toLowerCase(Locale.ROOT);
                                     paymentMethodCounts.put(methodKey, paymentMethodCounts.getOrDefault(methodKey, 0) + 1);
                                 }
@@ -139,7 +145,7 @@ public class Incomes_Admin extends AppCompatActivity {
                     for (PaymentEntry entry : allPayments) {
                         addIncomeCard(entry);
                     }
-                    updatePieChart(); // === ΝΕΟ ===
+                    updatePieChart();
                 }
             } else {
                 Toast.makeText(this, "Σφάλμα κατά την ανάκτηση των δεδομένων.", Toast.LENGTH_SHORT).show();
@@ -150,7 +156,7 @@ public class Incomes_Admin extends AppCompatActivity {
     private void loadIncomesForDate(long startMillis, long endMillis) {
         loadingBar.setVisibility(View.VISIBLE);
         historyContainer.removeAllViews();
-        paymentMethodCounts.clear(); // === ΝΕΟ ===
+        paymentMethodCounts.clear();
 
         db.collection("users").get().addOnCompleteListener(task -> {
             loadingBar.setVisibility(View.GONE);
@@ -186,8 +192,6 @@ public class Incomes_Admin extends AppCompatActivity {
                                 if (userName != null && amount != null && timestamp != null) {
                                     if (timestamp >= startMillis && timestamp <= endMillis) {
                                         filteredPayments.add(new PaymentEntry(userName, amount, timestamp, method));
-
-                                        // === ΝΕΟ ===
                                         String methodKey = method.toLowerCase(Locale.ROOT);
                                         paymentMethodCounts.put(methodKey, paymentMethodCounts.getOrDefault(methodKey, 0) + 1);
                                     }
@@ -204,7 +208,7 @@ public class Incomes_Admin extends AppCompatActivity {
                     for (PaymentEntry entry : filteredPayments) {
                         addIncomeCard(entry);
                     }
-                    updatePieChart(); // === ΝΕΟ ===
+                    updatePieChart();
                 }
             } else {
                 Toast.makeText(this, "Σφάλμα κατά την ανάκτηση των δεδομένων.", Toast.LENGTH_SHORT).show();
@@ -212,7 +216,6 @@ public class Incomes_Admin extends AppCompatActivity {
         });
     }
 
-    // === ΝΕΟ ===
     private void updatePieChart() {
         List<PieEntry> entries = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : paymentMethodCounts.entrySet()) {

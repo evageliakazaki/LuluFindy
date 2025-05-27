@@ -85,19 +85,7 @@
                 android:layout_marginEnd="8dp"
                 app:cardBackgroundColor="@color/pink_hover"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="4dp">
-
-                <Button
-                    android:id="@+id/btn_return"
-                    android:layout_width="wrap_content"
-                    android:layout_height="76dp"
-                    android:background="@android:color/transparent"
-                    android:paddingHorizontal="32dp"
-                    android:paddingVertical="16dp"
-                    android:text="Επιστροφή"
-                    android:textColor="@android:color/black" />
-
-            </androidx.cardview.widget.CardView>
+                app:cardElevation="4dp"/>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"

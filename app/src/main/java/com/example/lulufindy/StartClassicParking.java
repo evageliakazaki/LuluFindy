@@ -37,7 +37,8 @@ import java.util.*;
 public class StartClassicParking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String API_KEY = "API KEY";
+
+    private static final String API_KEY = AppConfig.API_KEY;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -50,6 +51,8 @@ public class StartClassicParking extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_classic_parking);
+
+
 
         MaterialButton backButton = findViewById(R.id.back);
         backButton.setOnClickListener(v -> finish());

@@ -82,7 +82,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
@@ -91,8 +92,10 @@
             android:layout_gravity="center_horizontal"
             android:background="#ED6091"
             android:hint="@string/password"
+            android:inputType="textPassword"
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_sign_up"
@@ -126,6 +129,7 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/black"
+        android:layout_marginTop="10dp"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:ignore="TextSizeCheck,TextContrastCheck,VisualLintOverlap,VisualLintBounds" />

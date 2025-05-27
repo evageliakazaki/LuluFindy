@@ -55,7 +55,7 @@ public class ElectricParking extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Configuration.getInstance().setUserAgentValue(getPackageName());
-        setContentView(R.layout.activity_classic_parking);
+        setContentView(R.layout.activity_electric_parking);
 
         mapView = findViewById(R.id.map);
         mapLoading = findViewById(R.id.mapLoading);
@@ -117,6 +117,7 @@ public class ElectricParking extends AppCompatActivity {
                 }
             }
         };
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
                 fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
@@ -183,36 +184,10 @@ public class ElectricParking extends AppCompatActivity {
         parkingMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.electric_car, null));
 
         parkingMarker.setOnMarkerClickListener((marker, mapView) -> {
-            new AlertDialog.Builder(ElectricParking.this)
-                    .setTitle("Δέσμευση Θέσης")
-                    .setMessage("Θέλεις να δεσμεύσεις αυτή τη θέση στάθμευσης;")
-                    .setPositiveButton("Ναι", (dialog, which) -> {
-                        Toast.makeText(ElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
-                        openGoogleMaps(userMarker.getPosition(), parkingLocation);
-
-                        String name = "Parking " + latitude + "," + longitude;
-                        String type = "Classic";
-                        long startTimestamp = System.currentTimeMillis();
-
-                        Map<String, Object> historyEntry = new HashMap<>();
-                        historyEntry.put("parkingName", name);
-                        historyEntry.put("parkingType", type);
-                        historyEntry.put("timestamp", startTimestamp);
-                        historyEntry.put("endTimestamp", startTimestamp); // μπορείς να το ενημερώσεις αργότερα όταν τελειώσει η στάθμευση
-
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        FirebaseFirestore.getInstance()
-                                .collection("users")
-                                .document(userId)
-                                .update("reservedHistory", FieldValue.arrayUnion(historyEntry));
-                    })
-                    .setNegativeButton("Όχι", (dialog, which) -> dialog.dismiss())
-                    .show();
+            openGoogleMaps(userMarker.getPosition(), parkingLocation);
 
             return true;
         });
-
-
 
         mapView.getOverlays().add(parkingMarker);
     }

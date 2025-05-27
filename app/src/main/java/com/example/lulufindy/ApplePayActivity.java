@@ -30,7 +30,6 @@ public class ApplePayActivity extends AppCompatActivity {
         amount = getIntent().getDoubleExtra("amount", 0.0);
         amountText = findViewById(R.id.amount_text_apple_pay);
         payButton = findViewById(R.id.btn_apple_pay);
-        returnButton = findViewById(R.id.btn_return);
         returnSuccessButton = findViewById(R.id.btn_return_success);
         successLayout = findViewById(R.id.success_layout);
         paymentDetailsLayout = findViewById(R.id.payment_details_layout);
@@ -43,10 +42,6 @@ public class ApplePayActivity extends AppCompatActivity {
 
             paymentDetailsLayout.setVisibility(View.GONE);
             successLayout.setVisibility(View.VISIBLE);
-        });
-
-        returnButton.setOnClickListener(v -> {
-            finish();
         });
 
         returnSuccessButton.setOnClickListener(v -> {

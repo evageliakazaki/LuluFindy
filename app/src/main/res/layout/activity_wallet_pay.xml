@@ -76,14 +76,6 @@
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <Button
-                android:id="@+id/btn_back"
-                android:layout_width="77dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/pink_hover"
-                android:text="Επιστροφή" />
-
             <Space
                 android:layout_width="12dp"
                 android:layout_height="wrap_content" />

@@ -40,7 +40,7 @@
                         android:id="@+id/card_logo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="VISA"
+                        android:text="@string/VISA"
                         android:textColor="@android:color/white"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
-                        android:text=""
+                        android:text="@string/nothing"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
 
@@ -65,7 +65,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Expire Date"
+                            android:text="@string/expire_date"
                             android:textColor="@android:color/white"
                             android:textSize="12sp" />
 
@@ -75,7 +75,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="CVV"
+                            android:text="@string/cvv"
                             android:textColor="@android:color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -121,7 +121,7 @@
             android:id="@+id/payment_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ποσό πληρωμής: "
+            android:text="@string/payment_amount"
             android:textSize="18sp"
             android:layout_marginTop="12dp"
             android:textColor="@color/black"/>
@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Credit card"
+            android:text="@string/credit"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Name">
+            android:hint="@string/name2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/name_input"
@@ -156,7 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Card number">
+            android:hint="@string/card_number">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/card_number_input"
@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:hint="Expire Date">
+                android:hint="@string/expire_date2">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/expiry_date_input"
@@ -194,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:hint="CVV"
+                android:hint="@string/cvv"
                 android:inputType="numberPassword">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -220,16 +220,8 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/pink_hover"
-                android:text="Πληρωμή με κάρτα" />
+                android:text="@string/pay_with_card" />
 
-            <Button
-                android:id="@+id/return_button"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/pink_hover"
-                android:text="Επιστροφή" />
         </LinearLayout>
 
     </LinearLayout>

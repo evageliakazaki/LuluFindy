@@ -19,15 +19,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Calendar"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API KEY" />
+            android:value="API_KEY" />
 
         <activity
             android:name=".ManagementMap2"
-            android:exported="false"
-            android:label="@string/title_activity_management_map2" />
+            android:exported="false" />
         <activity
             android:name=".ParkingSpaceSituation"
             android:exported="false" />

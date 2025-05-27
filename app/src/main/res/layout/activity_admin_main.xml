@@ -61,7 +61,7 @@
                         android:layout_height="56dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:fontFamily="arima_variablefont_wght"
-                        android:text="🚗 Έναρξη Στάθμευσης"
+                        android:text="@string/startpark"
                         android:textColor="#333333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -81,7 +81,7 @@
                         android:layout_height="56dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:fontFamily="arima_variablefont_wght"
-                        android:text="🔍 Αναζήτηση Θέσης"
+                        android:text="@string/search_parking_space"
                         android:textColor="#333333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -101,7 +101,7 @@
                         android:layout_height="56dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:fontFamily="arima_variablefont_wght"
-                        android:text="👛 Πορτοφόλι"
+                        android:text="@string/wallet2"
                         android:textColor="#333333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -121,7 +121,7 @@
                         android:layout_height="56dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:fontFamily="arima_variablefont_wght"
-                        android:text="⚙️ Διαχείριση Χώρων Στάθμευσης"
+                        android:text="@string/manage_spaces"
                         android:textColor="#333333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
