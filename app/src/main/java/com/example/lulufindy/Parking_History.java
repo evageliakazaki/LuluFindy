@@ -67,13 +67,13 @@ public class Parking_History extends AppCompatActivity {
                         if (reservedHistory != null && !reservedHistory.isEmpty()) {
                             tableLayout.removeAllViews();
 
-                            // Αντιστροφή λιστών για εμφάνιση με το πιο πρόσφατο πρώτο
+
                             Collections.reverse(reservedHistory);
                             if (paymentHistory != null) {
                                 Collections.reverse(paymentHistory);
                             }
 
-                            // Header row
+
                             TableRow header = new TableRow(this);
                             header.addView(createHeaderTextView("Όνομα 🚗 "));
                             header.addView(createHeaderTextView("Τύπος 🅿️"));

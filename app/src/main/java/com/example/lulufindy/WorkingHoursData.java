@@ -8,7 +8,7 @@ public class WorkingHoursData {
     public boolean isSpecial;
 
     public WorkingHoursData() {
-        // Απαραίτητο για Firebase
+
     }
 
     public WorkingHoursData(String date, String fromTime, String toTime, boolean isHoliday, boolean isSpecial) {

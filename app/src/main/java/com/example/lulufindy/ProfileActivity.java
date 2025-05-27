@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Μη επεξεργάσιμο email
+
         emailInput.setText(user.getEmail());
         emailInput.setEnabled(false);
 
@@ -84,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Ενημέρωση Firestore
+
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", newName);
         updates.put("last_name", newLastName);
@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(this, "Σφάλμα ενημέρωσης", Toast.LENGTH_SHORT).show();
                 });
 
-        // Ενημέρωση Password
+
         String oldPassword = ((TextInputEditText) findViewById(R.id.old_password_input)).getText().toString().trim();
 
         if (!TextUtils.isEmpty(newPassword)) {

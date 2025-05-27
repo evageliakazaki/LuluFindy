@@ -197,7 +197,7 @@ public class StartClassicParking extends AppCompatActivity implements OnMapReady
                                             .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(StartClassicParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
 
-                                                // --- Δημιουργία ιστορικού entry ---
+
                                                 String name = displayName != null ? displayName : "Parking " + dest.latitude + "," + dest.longitude;
                                                 String type = "Classic";
                                                 long startTimestamp = System.currentTimeMillis();
@@ -213,7 +213,7 @@ public class StartClassicParking extends AppCompatActivity implements OnMapReady
                                                         .collection("users")
                                                         .document(userId);
 
-                                                // --- Ενημέρωση reservedHistory (λίστα) ---
+
                                                 userRef.update("reservedHistory", FieldValue.arrayUnion(historyEntry))
                                                         .addOnFailureListener(e -> {
                                                             Map<String, Object> data = new HashMap<>();
@@ -221,7 +221,7 @@ public class StartClassicParking extends AppCompatActivity implements OnMapReady
                                                             userRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Ενημέρωση parkingFrequency (counter per name) ---
+
                                                 DocumentReference adminRef = FirebaseFirestore.getInstance()
                                                         .collection("admin")
                                                         .document("admin");
@@ -235,7 +235,7 @@ public class StartClassicParking extends AppCompatActivity implements OnMapReady
                                                             adminRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Επιστροφή ---
+
                                                 Intent intent = new Intent(StartClassicParking.this, StartParking.class);
                                                 intent.putExtra("parking_name", displayName);
                                                 Intent returnIntent = new Intent();

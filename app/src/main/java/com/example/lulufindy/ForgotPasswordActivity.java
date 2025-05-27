@@ -61,7 +61,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     .addOnSuccessListener(querySnapshot -> {
                         if (!querySnapshot.isEmpty()) {
                             DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
-                            String uid = doc.getId(); // Υποθέτουμε ότι το ID του εγγράφου == UID
+                            String uid = doc.getId();
 
                             Log.d(TAG, "✅ Βρέθηκε UID: " + uid);
 

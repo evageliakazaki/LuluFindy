@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Logo -->
+
         <ImageView
             android:id="@+id/logo"
             android:layout_width="192dp"
@@ -21,7 +21,7 @@
             android:contentDescription="LuLu Findy Logo"
             android:src="@drawable/lulu_findy_logo" />
 
-        <!-- Ποσό Πληρωμής -->
+
         <TextView
             android:id="@+id/payment_amount_text"
             android:layout_width="wrap_content"

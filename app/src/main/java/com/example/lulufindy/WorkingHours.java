@@ -66,7 +66,7 @@ public class WorkingHours extends AppCompatActivity {
 
         setupTimePickers();
 
-        // Bonus: disable hours if holiday is ON
+
         holidaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             editFrom.setEnabled(!isChecked);
             editTo.setEnabled(!isChecked);

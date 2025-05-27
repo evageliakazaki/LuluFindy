@@ -42,14 +42,14 @@ public class AddParking extends AppCompatActivity {
             String parkingName = parking_name.getText().toString().trim();
             String parkingType = spinner.getSelectedItem().toString();
 
-            // Έλεγχος μορφής C1, E1, D1 κτλ.
+
             if (!parkingName.matches("^[CDE](\\d{1,3})$")) {
                 parking_name.setError("Το όνομα πρέπει να είναι της μορφής C1, D1 ή E1");
                 parking_name.requestFocus();
                 return;
             }
 
-            // Έλεγχος αριθμού
+
             int number = Integer.parseInt(parkingName.substring(1));
             if (number < 1) {
                 parking_name.setError("Ο αριθμός πρέπει να είναι μεγαλύτερος από 0");
@@ -57,7 +57,7 @@ public class AddParking extends AppCompatActivity {
                 return;
             }
 
-            // Έλεγχος επιλογής τύπου
+
             if (spinner.getSelectedItemPosition() == 0) {
                 TextView errorText = (TextView) spinner.getSelectedView();
                 errorText.setError("Απαραίτητη επιλογή");
@@ -67,7 +67,7 @@ public class AddParking extends AppCompatActivity {
                 return;
             }
 
-            // Επιπλέον έλεγχος prefix με βάση τον τύπο
+
             char prefix = parkingName.charAt(0);
             boolean validPrefix = (parkingType.equals("Κανονική Θέση") && prefix == 'C') ||
                     (parkingType.equals("Ηλεκτρική Θέση") && prefix == 'E') ||
@@ -79,7 +79,7 @@ public class AddParking extends AppCompatActivity {
                 return;
             }
 
-            // Έλεγχος αν υπάρχει ήδη
+
             checkIfParkingNameExists(parkingName, exists -> {
                 if (exists) {
                     parking_name.setError("Αυτό το όνομα θέσης υπάρχει ήδη!");
@@ -141,7 +141,7 @@ public class AddParking extends AppCompatActivity {
         }
     }
 
-    // Firestore έλεγχος
+
     private void checkIfParkingNameExists(String name, final OnExistenceCheckListener listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -167,7 +167,7 @@ public class AddParking extends AppCompatActivity {
         }
     }
 
-    // Callback interface
+
     interface OnExistenceCheckListener {
         void onCheckComplete(boolean exists);
     }

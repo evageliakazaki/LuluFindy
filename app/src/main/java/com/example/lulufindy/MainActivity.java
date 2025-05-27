@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageButton btnProfile = findViewById(R.id.btnProfile);
         btnProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
 
-        // Drawer
+
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Buttons
+
         startBtn = findViewById(R.id.btnStartParking);
         startBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, StartParking.class);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
         });
 
-        // Έλεγχος ώρας εργασίας
+
         checkWorkingHours();
     }
 

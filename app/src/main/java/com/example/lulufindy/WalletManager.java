@@ -18,7 +18,7 @@ public class WalletManager {
     private static double localWalletBalance = 0.0;
     private static ListenerRegistration listener;
 
-    // === FIRESTORE ===
+
 
     public static void getWalletBalance(BalanceCallback callback) {
         String uid = getCurrentUserUid();
@@ -63,7 +63,7 @@ public class WalletManager {
                 localWalletBalance -= amount;
                 callback.onBalanceFetched(localWalletBalance);
             } else {
-                callback.onBalanceFetched(-1); // αποτυχία
+                callback.onBalanceFetched(-1);
             }
             return;
         }
@@ -82,7 +82,7 @@ public class WalletManager {
                     callback.onBalanceFetched(newBalance);
                 });
             } else {
-                callback.onBalanceFetched(-1); // αποτυχία
+                callback.onBalanceFetched(-1);
             }
         });
     }
@@ -119,7 +119,7 @@ public class WalletManager {
         }
     }
 
-    // === ΤΟΠΙΚΕΣ ΜΕΘΟΔΟΙ (offline χρήση ή χωρίς login) ===
+
 
     public static double getLocalWalletBalance() {
         return localWalletBalance;
@@ -141,7 +141,7 @@ public class WalletManager {
         localWalletBalance = amount;
     }
 
-    // === Βοηθητικό ===
+
 
     private static String getCurrentUserUid() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -150,12 +150,12 @@ public class WalletManager {
         return null;
     }
 
-    // === Firestore Wallet Model ===
+
 
     public static class Wallet {
         public double balance;
 
-        public Wallet() {}  // Firestore χρειάζεται constructor χωρίς ορίσματα
+        public Wallet() {}
         public Wallet(double balance) {
             this.balance = balance;
         }

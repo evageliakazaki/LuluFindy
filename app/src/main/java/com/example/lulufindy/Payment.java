@@ -33,7 +33,7 @@ public class Payment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        // Initialize Views
+
         durationText = findViewById(R.id.duration_text);
         chargeText = findViewById(R.id.charge_text);
         applePayCard = findViewById(R.id.apple_pay_card);
@@ -44,7 +44,7 @@ public class Payment extends AppCompatActivity {
 
         initialBackgroundColor = Color.parseColor("#FFF5A2BE");
 
-        // Get intent data
+
         Intent intent = getIntent();
         String totalTime = intent.getStringExtra("total_time");
         totalAmount = intent.getDoubleExtra("total_cost", 0.00);
@@ -52,13 +52,13 @@ public class Payment extends AppCompatActivity {
         durationText.setText("Χρόνος: " + totalTime);
         chargeText.setText(String.format("Κόστος: %.2f€", totalAmount));
 
-        // Selectable cards
+
         googlePayCard.setOnClickListener(v -> selectMethod("Google Pay", googlePayCard));
         applePayCard.setOnClickListener(v -> selectMethod("Apple Pay", applePayCard));
         cardCard.setOnClickListener(v -> selectMethod("Κάρτα", cardCard));
         walletCard.setOnClickListener(v -> selectMethod("Πορτοφόλι", walletCard));
 
-        // Pay button logic
+
         payButton.setOnClickListener(v -> {
             if (selectedMethod == null) {
                 Toast.makeText(this, "Επίλεξε τρόπο πληρωμής", Toast.LENGTH_SHORT).show();
@@ -103,7 +103,7 @@ public class Payment extends AppCompatActivity {
         cardCard.setCardBackgroundColor(initialBackgroundColor);
         walletCard.setCardBackgroundColor(initialBackgroundColor);
 
-        // Highlight selected
+
         selectedCard.setCardBackgroundColor(Color.parseColor("#FFEF6E99"));
     }
 
@@ -120,7 +120,7 @@ public class Payment extends AppCompatActivity {
         paymentEntry.put("duration", duration);
         paymentEntry.put("timestamp", System.currentTimeMillis());
 
-        // Save to user history
+
         Map<String, Object> userUpdate = new HashMap<>();
         userUpdate.put("paymentHistory", FieldValue.arrayUnion(paymentEntry));
         FirebaseFirestore.getInstance()
@@ -128,7 +128,7 @@ public class Payment extends AppCompatActivity {
                 .document(userId)
                 .set(userUpdate, SetOptions.merge());
 
-        // Save to admin income tracking
+
         FirebaseFirestore.getInstance()
                 .collection("admin")
                 .document("admin")

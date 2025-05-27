@@ -128,7 +128,7 @@ public class StartParking extends AppCompatActivity {
 
             Toast.makeText(this, "Η στάθμευση ξεκίνησε!", Toast.LENGTH_SHORT).show();
 
-            // Προαιρετικά απενεργοποιούμε το κουμπί για να μη ξεκινήσει ξανά
+
             startButton.setEnabled(false);
             areabtn.setEnabled(false);
             carPlateInput.setEnabled(false);
@@ -198,7 +198,7 @@ public class StartParking extends AppCompatActivity {
                 String carPlate = carPlateInput.getText().toString().trim();
                 String parkingType = parkingTypeInput.getText().toString().trim();
 
-                // Έλεγχος αν είναι κενά
+
                 if (carPlate.isEmpty()) {
                     carPlateInput.setError("Το πεδίο είναι υποχρεωτικό");
                     return;
@@ -208,7 +208,7 @@ public class StartParking extends AppCompatActivity {
                     return;
                 }
 
-                // Έλεγχος μορφής πινακίδας (π.χ. ΑΒ1234 ή ΧΥΖ5678)
+
                 if (!carPlate.matches("^[Α-ΩA-Z]{2,3}\\d{4}$")) {
                     carPlateInput.setError("Μη έγκυρη πινακίδα (π.χ. ΑΒ1234 ή ΧΥΖ5678)");
                     return;

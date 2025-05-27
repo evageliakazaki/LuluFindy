@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/lulu_findy_logo" />
 
-    <!-- ΝΕΟ: Pie Chart για μεθόδους πληρωμής -->
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/paymentPieChart"
         android:layout_width="0dp"

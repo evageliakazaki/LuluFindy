@@ -114,7 +114,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                         if (geo != null && (taken == null || !taken)) {
                             LatLng pos = new LatLng(geo.getLatitude(), geo.getLongitude());
 
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue); // Εδώ είναι το εικονίδιο για disabled parking
+                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue);
 
                             Marker marker = mMap.addMarker(new MarkerOptions()
                                     .position(pos)
@@ -211,7 +211,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                                         .collection("users")
                                                         .document(userId);
 
-                                                // --- Ενημέρωση reservedHistory (λίστα) ---
+
                                                 userRef.update("reservedHistory", FieldValue.arrayUnion(historyEntry))
                                                         .addOnFailureListener(e -> {
                                                             Map<String, Object> data = new HashMap<>();
@@ -219,7 +219,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                                             userRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Ενημέρωση parkingFrequency (counter per name) ---
+
                                                 DocumentReference adminRef = FirebaseFirestore.getInstance()
                                                         .collection("admin")
                                                         .document("admin");
@@ -233,7 +233,7 @@ public class StartDisabledParking extends AppCompatActivity implements OnMapRead
                                                             adminRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Επιστροφή ---
+
                                                 Intent intent = new Intent(StartDisabledParking.this, StartParking.class);
                                                 intent.putExtra("parking_name", displayName);
                                                 Intent returnIntent = new Intent();

@@ -122,7 +122,6 @@ public class ManagementMap extends AppCompatActivity implements OnMapReadyCallba
                     }
                 }
 
-                // Απόκρυψη πληκτρολογίου
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);

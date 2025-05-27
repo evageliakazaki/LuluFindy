@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Προσθήκη ScrollView -->
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -129,7 +129,7 @@
                     android:textColor="#000"
                     android:textSize="20sp" />
 
-                <!-- Κουμπιά με CardViews -->
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"

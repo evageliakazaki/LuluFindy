@@ -21,30 +21,30 @@ public class WalletPayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_pay);
 
-        // UI binding
+
         walletBalanceText = findViewById(R.id.wallet_balance);
         balanceCheckText = findViewById(R.id.balance_check);
         paymentAmountText = findViewById(R.id.payment_amount_text);
         btnPay = findViewById(R.id.btn_pay);
         btnManage = findViewById(R.id.btn_wallet_manage);
 
-        // Λήψη ποσού πληρωμής από intent
+
         paymentAmount = getIntent().getDoubleExtra("amount", 0.0);
         paymentAmountText.setText("Ποσό πληρωμής: €" + String.format("%.2f", paymentAmount));
 
-        // Ενημέρωση υπολοίπου με το που φορτώνει η οθόνη
+
         refreshBalance();
 
 
 
 
-        // Διαχείριση υπολοίπου
+
         btnManage.setOnClickListener(v -> {
             Intent intent = new Intent(WalletPayActivity.this, WalletManagerActivity.class);
             startActivity(intent);
         });
 
-        // Πληρωμή
+
         btnPay.setOnClickListener(v -> {
             WalletManager.deductFromWallet(paymentAmount, newBalance -> {
                 if (newBalance >= 0) {

@@ -69,8 +69,8 @@ public class Payment_History extends AppCompatActivity {
         clearFilterButton = findViewById(R.id.clearFilterButton);
 
         clearFilterButton.setOnClickListener(v -> {
-            fetchPaymentHistory();  // Φόρτωση όλων των συναλλαγών ξανά
-            clearFilterButton.setVisibility(View.GONE); // Απόκρυψη κουμπιού
+            fetchPaymentHistory();
+            clearFilterButton.setVisibility(View.GONE);
         });
 
     }
@@ -119,7 +119,7 @@ public class Payment_History extends AppCompatActivity {
                 });
     }
 
-    // === ΝΕΟ ===
+
     private void fetchPaymentHistoryForDate(long startMillis, long endMillis) {
         loadingBar.setVisibility(View.VISIBLE);
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -184,7 +184,7 @@ public class Payment_History extends AppCompatActivity {
             String dateStr = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                     .format(new Date(timestamp));
 
-            // Κάρτα εμφάνισης
+
             LinearLayout card = new LinearLayout(this);
             card.setOrientation(LinearLayout.HORIZONTAL);
             card.setPadding(24, 24, 24, 24);
@@ -196,7 +196,7 @@ public class Payment_History extends AppCompatActivity {
             cardLp.setMargins(0, 0, 0, 32);
             card.setLayoutParams(cardLp);
 
-            // Εικονίδιο τρόπου πληρωμής
+
             ImageView icon = new ImageView(this);
             LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(160, 160);
             icon.setLayoutParams(iconLp);
@@ -212,7 +212,7 @@ public class Payment_History extends AppCompatActivity {
             else
                 icon.setImageResource(R.drawable.ic_card);
 
-            // Κείμενο
+
             LinearLayout textCol = new LinearLayout(this);
             textCol.setOrientation(LinearLayout.VERTICAL);
             textCol.setPadding(24, 0, 0, 0);

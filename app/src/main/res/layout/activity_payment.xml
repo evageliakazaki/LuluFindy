@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ===== Η διαδρομή ===== -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Διάρκεια -->
+
         <TextView
             android:id="@+id/duration_text"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <!-- Χρέωση (δυναμικό ποσό) -->
+
         <TextView
             android:id="@+id/charge_text"
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <!-- Στατικό label: Επιλογή τρόπου πληρωμής -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- ===== Πλέγμα μεθόδων πληρωμής ===== -->
+
         <GridLayout
             android:id="@+id/payment_grid"
             android:layout_width="match_parent"
@@ -74,7 +74,7 @@
             android:alignmentMode="alignMargins"
             android:padding="8dp">
 
-            <!-- Apple Pay -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/apple_pay_card"
                 android:layout_width="0dp"
@@ -111,7 +111,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Google Pay -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/google_pay_card"
                 android:layout_width="0dp"
@@ -148,7 +148,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Πληρωμή με κάρτα -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_card"
                 android:layout_width="0dp"
@@ -185,7 +185,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Πορτοφόλι -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/wallet_card"
                 android:layout_width="0dp"
@@ -223,7 +223,7 @@
             </androidx.cardview.widget.CardView>
         </GridLayout>
 
-        <!-- Κουμπί πληρωμής -->
+
         <Button
             android:id="@+id/payment_btn"
             android:layout_width="wrap_content"

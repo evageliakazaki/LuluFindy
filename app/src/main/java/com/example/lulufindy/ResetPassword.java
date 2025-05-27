@@ -42,7 +42,7 @@ public class ResetPassword extends AppCompatActivity {
             return;
         }
 
-        // Σύνδεση με τον προσωρινό κωδικό
+
         mAuth.signInWithEmailAndPassword(userEmail, tempCode)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = mAuth.getCurrentUser();
@@ -51,7 +51,7 @@ public class ResetPassword extends AppCompatActivity {
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(this, "Ο κωδικός άλλαξε επιτυχώς", Toast.LENGTH_SHORT).show();
 
-                                    // Μετάβαση στην κύρια οθόνη
+
                                     Intent intent = new Intent(this, MainActivity.class);
                                     startActivity(intent);
                                     finish();

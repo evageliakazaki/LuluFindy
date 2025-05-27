@@ -79,7 +79,7 @@ public class Calendar extends AppCompatActivity {
             }
         });
 
-        calendarView.setOnTouchListener((v, event) -> true); // Απενεργοποιεί swipe
+        calendarView.setOnTouchListener((v, event) -> true);
 
         calendarView.setDayBinder(new DayBinder<DayViewContainer>() {
             @Override
@@ -140,7 +140,7 @@ public class Calendar extends AppCompatActivity {
 
             @Override
             public void bind(MonthViewContainer container, CalendarMonth month) {
-                // Optional - μπορείς να βάλεις headers για μέρες (Δ, Τ, Τετ...)
+
             }
         });
 
@@ -167,7 +167,7 @@ public class Calendar extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Log error if needed
+
             }
         });
     }

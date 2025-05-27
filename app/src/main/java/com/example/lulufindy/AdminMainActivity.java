@@ -51,14 +51,14 @@ public class AdminMainActivity extends AppCompatActivity implements NavigationVi
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Find buttons
+
         startBtn = findViewById(R.id.btnAdminButton2);
         searchBtn = findViewById(R.id.btnSearchParkingAdmin);
         walletbtn = findViewById(R.id.btnSearchAdmin);
         btnStatisticsAdmin = findViewById(R.id.btnStatisticsAdmin);
-        managementbtn = findViewById(R.id.btnWalletAdmin); // Assuming correct ID
+        managementbtn = findViewById(R.id.btnWalletAdmin);
 
-        // Set listeners
+
         startBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, StartParking.class);
             intent.putExtra("origin", "admin");

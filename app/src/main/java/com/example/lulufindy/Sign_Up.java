@@ -16,9 +16,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-        import java.util.HashMap;
-        import java.util.Map;
-        import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class Sign_Up extends AppCompatActivity {
     private TextInputEditText editTextEmail, editTextPassword, nameInput, lastNameInput;
@@ -95,9 +95,9 @@ public class Sign_Up extends AppCompatActivity {
 
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             if (currentUser != null) {
-                                String userId = currentUser.getUid(); // Το ID του χρήστη στο Authentication
+                                String userId = currentUser.getUid();
 
-                                // Δημιουργία ενός Map για τα δεδομένα του χρήστη στο Firestore
+
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("name", name);
                                 user.put("last_name", lastName);
@@ -105,12 +105,12 @@ public class Sign_Up extends AppCompatActivity {
 
 
 
-                                // Αποθήκευση των δεδομένων στο Firestore με το ίδιο userId
+
                                 db.collection("users").document(userId).set(user)
                                         .addOnSuccessListener(aVoid -> {
                                             clearInputs();
 
-                                            // Μετά την αποθήκευση, πηγαίνουμε στην MainActivity
+
                                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                             startActivity(intent);
                                             finish();
@@ -119,7 +119,7 @@ public class Sign_Up extends AppCompatActivity {
                             }
 
                         } else {
-                            // Αν η δημιουργία χρήστη αποτύχει, εμφάνιση του σφάλματος
+
                             Exception exception = task.getException();
                             if (exception != null) {
                                 Log.e("SignUpError", "Error creating account: " + exception.getMessage());

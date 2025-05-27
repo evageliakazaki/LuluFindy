@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:ignore="ExtraText">
 
-    <!-- Χάρτης -->
+
     <org.osmdroid.views.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:visibility="visible" />
 
-    <!-- Κουμπί κάτω αριστερά -->
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/back"
         android:layout_width="wrap_content"

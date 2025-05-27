@@ -194,7 +194,7 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                                             .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(StartElectricParking.this, "Η θέση δεσμεύτηκε!", Toast.LENGTH_SHORT).show();
 
-                                                // --- Δημιουργία ιστορικού entry ---
+
                                                 String name = displayName != null ? displayName : "Parking " + dest.latitude + "," + dest.longitude;
                                                 String type = "Electric";
                                                 long startTimestamp = System.currentTimeMillis();
@@ -210,7 +210,7 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                                                         .collection("users")
                                                         .document(userId);
 
-                                                // --- Ενημέρωση reservedHistory (λίστα) ---
+
                                                 userRef.update("reservedHistory", FieldValue.arrayUnion(historyEntry))
                                                         .addOnFailureListener(e -> {
                                                             Map<String, Object> data = new HashMap<>();
@@ -218,7 +218,7 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                                                             userRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Ενημέρωση parkingFrequency (counter per name) ---
+
                                                 DocumentReference adminRef = FirebaseFirestore.getInstance()
                                                         .collection("admin")
                                                         .document("admin");
@@ -232,7 +232,7 @@ public class StartElectricParking extends AppCompatActivity implements OnMapRead
                                                             adminRef.set(data, SetOptions.merge());
                                                         });
 
-                                                // --- Επιστροφή ---
+
                                                 Intent intent = new Intent(StartElectricParking.this, StartParking.class);
                                                 intent.putExtra("parking_name", displayName);
                                                 Intent returnIntent = new Intent();
