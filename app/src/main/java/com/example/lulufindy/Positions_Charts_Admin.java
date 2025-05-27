@@ -63,9 +63,9 @@ public class Positions_Charts_Admin extends AppCompatActivity {
                         }
 
                         PieDataSet dataSet = new PieDataSet(entries, "Συχνότερες Θέσεις");
-                        dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Αυτόματη επιλογή όμορφων χρωμάτων
+                        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
                         dataSet.setValueTextColor(0xFFFFFFFF);
-                        dataSet.setValueTextSize(14f);
+                        dataSet.setValueTextSize(18f);
 
                         PieData data = new PieData(dataSet);
 

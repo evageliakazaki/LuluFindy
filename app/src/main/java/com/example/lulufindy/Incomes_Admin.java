@@ -39,11 +39,7 @@ public class Incomes_Admin extends AppCompatActivity {
     private FirebaseFirestore db;
     private Button backButton;
     private ImageView filterButton;
-
-    // ΝΕΟ
     private Button clearFilterButton;
-
-    // ΝΕΟ
     private PieChart paymentPieChart;
     private Map<String, Integer> paymentMethodCounts = new HashMap<>();
 
@@ -56,7 +52,7 @@ public class Incomes_Admin extends AppCompatActivity {
         loadingBar = findViewById(R.id.loadingBar);
         backButton = findViewById(R.id.backButton);
         filterButton = findViewById(R.id.filterButton);
-        clearFilterButton = findViewById(R.id.clearFilterButton); // ΝΕΟ
+        clearFilterButton = findViewById(R.id.clearFilterButton);
 
         paymentPieChart = findViewById(R.id.paymentPieChart);
         db = FirebaseFirestore.getInstance();
@@ -77,7 +73,7 @@ public class Incomes_Admin extends AppCompatActivity {
                         long selectedEnd = calendar.getTimeInMillis();
 
                         loadIncomesForDate(selectedStart, selectedEnd);
-                        clearFilterButton.setVisibility(View.VISIBLE); // Δείξε κουμπί καθαρισμού
+                        clearFilterButton.setVisibility(View.VISIBLE);
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -88,7 +84,7 @@ public class Incomes_Admin extends AppCompatActivity {
 
         clearFilterButton.setOnClickListener(v -> {
             loadIncomes();
-            clearFilterButton.setVisibility(View.GONE); // Απόκρυψε κουμπί
+            clearFilterButton.setVisibility(View.GONE);
         });
     }
 
@@ -225,7 +221,7 @@ public class Incomes_Admin extends AppCompatActivity {
         PieDataSet dataSet = new PieDataSet(entries, "Μέθοδοι Πληρωμής");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         PieData data = new PieData(dataSet);
-        data.setValueTextSize(14f);
+        data.setValueTextSize(16f);
         data.setValueTextColor(getResources().getColor(android.R.color.black));
 
         paymentPieChart.setData(data);
