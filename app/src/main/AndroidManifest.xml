@@ -22,6 +22,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="API_KEY" />
 
+        <activity
+            android:name=".Sing_In"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LuluFindy.Splash" />
+
         <activity android:name=".ProfileActivity" android:exported="false" />
         <activity android:name=".Calendar" android:exported="false" />
         <activity android:name=".ManagementMap2" android:exported="false" />
@@ -47,7 +62,6 @@
         <activity android:name=".ElectricParking" android:exported="false" android:label="@string/title" />
         <activity android:name=".ClassicParking" android:exported="false" android:label="@string/title" />
         <activity android:name=".Sign_Up" android:exported="false" android:theme="@style/Theme.Material3.Light.NoActionBar" />
-        <activity android:name=".Sing_In" android:exported="true" android:theme="@style/Theme.Material3.Light.NoActionBar" />
 
         <activity android:name=".AdminMainActivity" android:exported="true" android:theme="@style/Theme.Material3.Light.NoActionBar" />
         <activity android:name=".Charts" />
@@ -58,16 +72,6 @@
         <activity android:name=".Positions_Charts_Admin" />
         <activity android:name=".Incomes_Admin" />
         <activity android:name=".IncomesChart_Admin" />
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LuluFindy.Splash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
     </application>
 

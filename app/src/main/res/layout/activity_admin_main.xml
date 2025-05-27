@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".AdminMainActivity">
 
-    <!-- Κύριο layout με Toolbar -->
+    <!-- Εξωτερικό LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,19 +22,20 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- Κύριο περιεχόμενο -->
+        <!-- Scrollable Περιεχόμενο -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/pink_gradient_background"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:padding="24dp">
+                android:padding="24dp"
+                android:background="@drawable/pink_gradient_background">
 
                 <ImageView
                     android:id="@+id/main_image_admin"
@@ -46,7 +47,7 @@
                     android:src="@drawable/lulu_findy_logo"
                     tools:ignore="ContentDescription,ImageContrastCheck" />
 
-                <!-- Κάρτες -->
+                <!-- Επαναλαμβανόμενες Κάρτες με Buttons -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -127,7 +128,6 @@
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Κάρτα Στατιστικών -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"

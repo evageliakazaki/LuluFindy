@@ -1,26 +1,34 @@
 package com.example.lulufindy;
 
-
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import com.google.android.material.navigation.NavigationView;
-import android.content.Intent;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,14 +36,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
     private Button searchBtn;
     private Button startBtn;
-    private Button btnCharts , btnWallet;
+    private Button btnCharts, btnWallet;
+    private TextView Walletbalance;
 
-    FirebaseAuth auth;
-    FirebaseUser user;
-
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TextView Walletbalance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +50,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         ImageButton btnCalendar = findViewById(R.id.btnCalendar);
-        btnCalendar.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Calendar.class);
-            startActivity(intent);
-        });
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(this, com.example.lulufindy.Calendar.class)));
 
         ImageButton btnProfile = findViewById(R.id.btnProfile);
-        btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
 
-
+        // Drawer
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
@@ -63,45 +65,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user = auth.getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
         Walletbalance = findViewById(R.id.tvWalletAmount);
 
-        // Ρύθμιση του ActionBarDrawerToggle για το άνοιγμα/κλείσιμο του μενού
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Εμφάνιση του κουμπιού του μενού στην ActionBar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Ορισμός του listener για τις επιλογές του μενού
         navigationView.setNavigationItemSelectedListener(this);
 
-        startBtn=findViewById(R.id.btnStartParking);
-        startBtn.setOnClickListener(v-> {
-            Intent intent = new Intent(MainActivity.this, StartParking.class);
+        // Buttons
+        startBtn = findViewById(R.id.btnStartParking);
+        startBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, StartParking.class);
             intent.putExtra("origin", "start");
             startActivity(intent);
             finish();
         });
-        searchBtn=findViewById(R.id.btnSearch);
+
+        searchBtn = findViewById(R.id.btnSearch);
         searchBtn.setOnClickListener(v -> showParkingTypeList());
 
         btnCharts = findViewById(R.id.btnCharts);
-        btnCharts.setOnClickListener(v-> {
-            Intent intent = new Intent(MainActivity.this, Charts.class);
-            startActivity(intent);
-        });
+        btnCharts.setOnClickListener(v -> startActivity(new Intent(this, Charts.class)));
 
         btnWallet = findViewById(R.id.btnWallet);
-        btnWallet.setOnClickListener(v-> {
-            Intent intent = new Intent(MainActivity.this, WalletManagerActivity.class);
+        btnWallet.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WalletManagerActivity.class);
             intent.putExtra("origin", "start");
             startActivity(intent);
             finish();
         });
+
+        // Έλεγχος ώρας εργασίας
+        checkWorkingHours();
     }
 
     private void showParkingTypeList() {
@@ -112,13 +112,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setItems(parkingOptions, (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            startActivity(new Intent(MainActivity.this, ClassicParking.class));
+                            startActivity(new Intent(this, ClassicParking.class));
                             break;
                         case 1:
-                            startActivity(new Intent(MainActivity.this, ElectricParking.class));
+                            startActivity(new Intent(this, ElectricParking.class));
                             break;
                         case 2:
-                            startActivity(new Intent(MainActivity.this, DisabledParking.class));
+                            startActivity(new Intent(this, DisabledParking.class));
                             break;
                         default:
                             Toast.makeText(this, "Άγνωστη επιλογή", Toast.LENGTH_SHORT).show();
@@ -128,55 +128,91 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .show();
     }
 
+    private void checkWorkingHours() {
+        String todayDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Calendar.getInstance().getTime());
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("working_hours");
+
+        dbRef.orderByChild("date").equalTo(todayDate)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean isAllowed = false;
+
+                        for (DataSnapshot entry : snapshot.getChildren()) {
+                            WorkingHoursData data = entry.getValue(WorkingHoursData.class);
+                            if (data == null) continue;
+
+                            if (data.isHoliday) break;
+
+                            if (!"ΚΛΕΙΣΤΑ".equals(data.fromTime) && !"ΚΛΕΙΣΤΑ".equals(data.toTime)) {
+                                try {
+                                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                                    Calendar now = Calendar.getInstance();
+                                    Calendar from = Calendar.getInstance();
+                                    Calendar to = Calendar.getInstance();
+
+                                    from.setTime(timeFormat.parse(data.fromTime));
+                                    to.setTime(timeFormat.parse(data.toTime));
+
+                                    int nowHour = now.get(Calendar.HOUR_OF_DAY);
+                                    int nowMin = now.get(Calendar.MINUTE);
+                                    int nowTotal = nowHour * 60 + nowMin;
+
+                                    int fromTotal = from.get(Calendar.HOUR_OF_DAY) * 60 + from.get(Calendar.MINUTE);
+                                    int toTotal = to.get(Calendar.HOUR_OF_DAY) * 60 + to.get(Calendar.MINUTE);
+
+                                    if (nowTotal >= fromTotal && nowTotal <= toTotal) {
+                                        isAllowed = true;
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("MainActivity", "Error parsing time", e);
+                                }
+                            }
+                        }
+
+                        if (!isAllowed) {
+                            startBtn.setEnabled(false);
+                            startBtn.setAlpha(0.5f); // Εμφανιστικά disabled
+                            Toast.makeText(MainActivity.this, "Εκτός ωραρίου στάθμευσης ή αργία!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("MainActivity", "Failed to read working hours", error.toException());
+                    }
+                });
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         int id = item.getItemId();
 
-        if (id == R.id.nav_parking){
-            Intent intent = new Intent(MainActivity.this, StartParking.class);
-            intent.putExtra("origin", "start");
-            startActivity(intent);
+        if (id == R.id.nav_parking) {
+            startActivity(new Intent(this, StartParking.class).putExtra("origin", "start"));
             finish();
-        }
-
-        else if (id == R.id.nav_wallet) {
-            Intent intent = new Intent(MainActivity.this, WalletManagerActivity.class);
-            intent.putExtra("origin", "start");
-            startActivity(intent);
+        } else if (id == R.id.nav_wallet) {
+            startActivity(new Intent(this, WalletManagerActivity.class).putExtra("origin", "start"));
             finish();
-        }
-
-        else if (id == R.id.nav_charts) {
-            Intent intent = new Intent(getApplicationContext(), Charts.class);
-            startActivity(intent);
-        }
-        else if (id == R.id.nav_search) {
-             showParkingTypeList();
-
+        } else if (id == R.id.nav_charts) {
+            startActivity(new Intent(this, Charts.class));
+        } else if (id == R.id.nav_search) {
+            showParkingTypeList();
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(getApplicationContext(),Sing_In.class);
-            startActivity(intent);
+            startActivity(new Intent(this, Sing_In.class));
             finish();
         }
 
-        // Κλείσιμο του πλάγιου μενού μετά την επιλογή
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    // Μέθοδος για να χειριστεί το πάτημα του "back" κουμπιού όταν το μενού είναι ανοιχτό
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -199,22 +235,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .document(currentUser.getUid())
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            Double balance = documentSnapshot.getDouble("balance");
-                            if (balance != null) {
-                                Walletbalance.setText(String.format("%.2f €", balance));
-                            } else {
-                                Walletbalance.setText("0.00 €");
-                            }
-                        } else {
-                            Walletbalance.setText("0.00 €");
-                        }
+                        Double balance = documentSnapshot.getDouble("balance");
+                        Walletbalance.setText(String.format("%.2f €", balance != null ? balance : 0.0));
                     })
-                    .addOnFailureListener(e -> {
-                        Log.e("MainActivity", "Failed to load wallet balance", e);
-                    });
+                    .addOnFailureListener(e -> Log.e("MainActivity", "Failed to load wallet balance", e));
         }
     }
-
-
 }
