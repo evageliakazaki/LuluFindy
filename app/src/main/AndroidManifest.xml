@@ -20,7 +20,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBc_QI1nh9EfLlCSdcTEUPjNhTYtCX2viI" />
+            android:value="" />
 
         <activity
             android:name=".Sing_In"
