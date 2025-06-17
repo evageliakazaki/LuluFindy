@@ -1,7 +1,9 @@
 package com.example.lulufindy;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ public class Positions_Charts_Admin extends AppCompatActivity {
 
     private PieChart pieChart;
     private Button backButton;
+    private ProgressBar loadingPieChart;
     private FirebaseFirestore db;
 
     @Override
@@ -30,6 +33,7 @@ public class Positions_Charts_Admin extends AppCompatActivity {
 
         pieChart = findViewById(R.id.pieChart);
         backButton = findViewById(R.id.backButton);
+        loadingPieChart = findViewById(R.id.loadingPieChart);
 
         db = FirebaseFirestore.getInstance();
 
@@ -39,7 +43,11 @@ public class Positions_Charts_Admin extends AppCompatActivity {
     }
 
     private void loadParkingFrequency() {
+        loadingPieChart.setVisibility(View.VISIBLE);
+
         db.collection("admin").document("admin").get().addOnCompleteListener(task -> {
+            loadingPieChart.setVisibility(View.GONE);
+
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
                 if (doc != null && doc.exists()) {
@@ -92,3 +100,4 @@ public class Positions_Charts_Admin extends AppCompatActivity {
         });
     }
 }
+

@@ -20,6 +20,18 @@
         android:background="@drawable/pink_gradient_background"
         android:elevation="8dp" />
 
+    <ProgressBar
+        android:id="@+id/loadingPieChart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminate="true"
+        style="?android:attr/progressBarStyleLarge"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
