@@ -70,6 +70,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 return;
                             }
 
+
+
+                            String storedDeviceId = doc.getString("deviceId");
+
+                            String currentDeviceId = new DeviceId().getDeviceId(ForgotPasswordActivity.this);
+                            if (storedDeviceId != null && storedDeviceId.equals(currentDeviceId)) {
+
                             // 🔁 Κλήση της Cloud Function με σωστό serialization
                             Map<String, Object> data = new HashMap<>();
                             data.put("uid", uid);
@@ -98,15 +105,21 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                                         startActivity(intent);
                                                     })
                                                     .show();
-                                        } else {
-                                            Toast.makeText(this, "⚠️ Σφάλμα στην απάντηση από τον server", Toast.LENGTH_LONG).show();
-                                            Log.e(TAG, "❌ rawData δεν ήταν Map: " + rawData);
                                         }
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e(TAG, "❌ Σφάλμα Cloud Function: " + e.getMessage(), e);
                                         Toast.makeText(this, "Αποτυχία: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     });
+                        }else {
+                                new AlertDialog.Builder(this)
+                                        .setTitle("⚠️ Αποτυχία Επαλήθευσης")
+                                        .setMessage("Η επαλήθευση χρήστη απέτυχε. Δοκιμάστε ξανά.")
+                                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                                        .setCancelable(false)
+                                        .show();
+
+                            }
                         } else {
                             Log.e(TAG, "❌ Δεν βρέθηκε χρήστης με email: " + email);
                             Toast.makeText(this, "Το email δεν βρέθηκε στη βάση", Toast.LENGTH_SHORT).show();

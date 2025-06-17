@@ -96,12 +96,14 @@ public class Sign_Up extends AppCompatActivity {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             if (currentUser != null) {
                                 String userId = currentUser.getUid();
-
+                                DeviceId checker = new DeviceId();
+                                String deviceId = checker.getDeviceId(Sign_Up.this);
 
                                 Map<String, Object> user = new HashMap<>();
                                 user.put("name", name);
                                 user.put("last_name", lastName);
                                 user.put("email", email);
+                                user.put("deviceId", deviceId);
 
 
 
