@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,12 +55,45 @@ public class CardPaymentActivity extends AppCompatActivity {
             }
         });
 
-        expiryDateInput.addTextChangedListener(new CardTextWatcher() {
+        expiryDateInput.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+            private String mmYY = "MMYY";
+
             @Override
-            public void onTextChanged(CharSequence s) {
-                cardExpiry.setText(s);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString();
+
+                if (!input.equals(current)) {
+                    String clean = input.replaceAll("[^\\d]", "");
+
+                    int length = clean.length();
+                    StringBuilder sb = new StringBuilder();
+
+                    if (length >= 2) {
+                        sb.append(clean.substring(0, 2));
+                        if (length > 2) {
+                            sb.append("/");
+                            sb.append(clean.substring(2, Math.min(4, length)));
+                        }
+                    } else {
+                        sb.append(clean);
+                    }
+
+                    current = sb.toString();
+                    expiryDateInput.removeTextChangedListener(this);
+                    expiryDateInput.setText(current);
+                    expiryDateInput.setSelection(current.length());
+                    expiryDateInput.addTextChangedListener(this);
+                }
             }
         });
+
 
         cvvInput.addTextChangedListener(new CardTextWatcher() {
             @Override
@@ -90,6 +122,26 @@ public class CardPaymentActivity extends AppCompatActivity {
                 Toast.makeText(CardPaymentActivity.this, "Το CVV πρέπει να έχει 3 ψηφία.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (!expiry.matches("^\\d{2}/\\d{2}$")) {
+                Toast.makeText(this, "Η ημερομηνία πρέπει να είναι σε μορφή MM/YY.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String[] parts = expiry.split("/");
+            int month = Integer.parseInt(parts[0]);
+            int year = Integer.parseInt(parts[1]);
+
+            if (month < 1 || month > 12) {
+                Toast.makeText(this, "Μη έγκυρος μήνας λήξης.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (year < 25) {
+                Toast.makeText(this, "Η κάρτα έχει λήξει ή δεν είναι έγκυρη.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
 
             Intent successIntent = new Intent(CardPaymentActivity.this, CardPaymentSuccessActivity.class);
             successIntent.putExtra("amount", paymentAmount);
