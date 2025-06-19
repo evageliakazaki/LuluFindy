@@ -129,6 +129,11 @@ public class WorkingHours extends AppCompatActivity {
             to = toTime.getText().toString().trim();
         }
 
+        if (date.isEmpty()) {
+            Toast.makeText(this, "Παρακαλώ επίλεξε ημερομηνία", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Map<String, Object> data = new HashMap<>();
         data.put("date", date);
         data.put("fromTime", from);
@@ -136,14 +141,14 @@ public class WorkingHours extends AppCompatActivity {
         data.put("isHoliday", isHoliday);
         data.put("isSpecial", isSpecial);
 
+        // Κάνουμε format την ημερομηνία για να την χρησιμοποιήσουμε σαν key (π.χ., 19_06_2025)
+        String dateKey = date.replace("/", "_");
+
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("working_hours");
-        String id = dbRef.push().getKey();
-        if (id != null) {
-            dbRef.child(id).setValue(data)
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(this, "Επιτυχής αποθήκευση!", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Σφάλμα αποθήκευσης", Toast.LENGTH_SHORT).show());
-        }
+        dbRef.child(dateKey).setValue(data)
+                .addOnSuccessListener(aVoid ->
+                        Toast.makeText(this, "Επιτυχής αποθήκευση!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Σφάλμα αποθήκευσης", Toast.LENGTH_SHORT).show());
     }
 }
